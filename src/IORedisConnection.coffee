@@ -14,7 +14,7 @@ class IORedisConnection
 
   constructor: (options={}) ->
     parser.load options, @defaults, @
-    @Redis ?= eval("require")("ioredis") # Obfuscated or else Webpack/Angular will try to inline the optional ioredis module. To override this behavior: pass the ioredis module to Bottleneck as the 'Redis' option.
+    @Redis ?= eval("require")("ioredis") # Obfuscated or else Webpack/Angular will try to inline the optional ioredis module. To override this behavior: pass the ioredis module to Pacejs as the 'Redis' option.
     @Events ?= new Events @
     @terminated = false
 

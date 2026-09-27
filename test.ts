@@ -1,16 +1,16 @@
-/// <reference path="bottleneck.d.ts" />
+/// <reference path="pacejs.d.ts" />
 
-import Bottleneck from "bottleneck";
+import Pacejs from "pacejs";
 // import * as assert from "assert";
 function assert(b: boolean): void { }
 
 /*
 This file is run by scripts/build.sh.
-It is used to validate the typings in bottleneck.d.ts.
+It is used to validate the typings in pacejs.d.ts.
 The command is: tsc --noEmit --strictNullChecks test.ts
 This file cannot be run directly.
 In order to do that, you must comment out the first line,
-and change "bottleneck" to "." on the third line.
+and change "pacejs" to "." on the third line.
 */
 
 function withCb(foo: number, bar: () => void, cb: (err: any, result: string) => void) {
@@ -18,13 +18,13 @@ function withCb(foo: number, bar: () => void, cb: (err: any, result: string) => 
   cb(null, s);
 }
 
-console.log(Bottleneck);
+console.log(Pacejs);
 
-let limiter = new Bottleneck({
+let limiter = new Pacejs({
   maxConcurrent: 5,
   minTime: 1000,
   highWater: 20,
-  strategy: Bottleneck.strategy.LEAK,
+  strategy: Pacejs.strategy.LEAK,
   reservoirRefreshInterval: 1000 * 60,
   reservoirRefreshAmount: 10,
   reservoirIncreaseInterval: 1000 * 60,
@@ -82,7 +82,7 @@ limiter.on("message", (msg) => console.log(msg));
 
 limiter.publish(JSON.stringify({ a: "abc", b: { c: 123 }}));
 
-function checkEventInfo(info: Bottleneck.EventInfo) {
+function checkEventInfo(info: Pacejs.EventInfo) {
   const numArgs: number = info.args.length;
   const id: string = info.options.id;
 }
@@ -163,11 +163,11 @@ limiter.on('done', (info) => {
   const count: number = info.retryCount;
 })
 
-let group = new Bottleneck.Group({
+let group = new Pacejs.Group({
   maxConcurrent: 5,
   minTime: 1000,
   highWater: 10,
-  strategy: Bottleneck.strategy.LEAK,
+  strategy: Pacejs.strategy.LEAK,
   datastore: "ioredis",
   clearDatastore: true,
   clientOptions: {},
@@ -226,7 +226,7 @@ let counts = limiter.counts();
 console.log(`${counts.EXECUTING + 2}`);
 console.log(limiter.jobStatus('some-id'))
 console.log(limiter.jobs());
-console.log(limiter.jobs(Bottleneck.Status.RUNNING));
+console.log(limiter.jobs(Pacejs.Status.RUNNING));
 
 
 group.deleteKey("pizza")
@@ -261,7 +261,7 @@ const id: string = limiter.id;
 const datastore: string = limiter.datastore;
 const channel: string = limiter.channel();
 
-const redisConnection = new Bottleneck.RedisConnection({
+const redisConnection = new Pacejs.RedisConnection({
   client: "NodeRedis client object",
   clientOptions: {}
 })
@@ -276,11 +276,11 @@ redisConnection.on("error", (err) => {
   console.log(err.message)
 })
 
-const limiterWithConn = new Bottleneck({
+const limiterWithConn = new Pacejs({
   connection: redisConnection
 })
 
-const ioredisConnection = new Bottleneck.IORedisConnection({
+const ioredisConnection = new Pacejs.IORedisConnection({
   client: "ioredis client object",
   clientOptions: {},
   clusterNodes: []
@@ -292,24 +292,24 @@ ioredisConnection.ready()
   const subscriber = ioredisConnectionClients.subscriber;
 })
 
-ioredisConnection.on("error", (err: Bottleneck.BottleneckError) => {
+ioredisConnection.on("error", (err: Pacejs.PacejsError) => {
   console.log(err.message)
 })
 
-const groupWithConn = new Bottleneck.Group({
+const groupWithConn = new Pacejs.Group({
   connection: ioredisConnection
 })
 
-const limiterWithConnFromGroup = new Bottleneck({
+const limiterWithConnFromGroup = new Pacejs({
   connection: groupWithConn.connection
 })
 
-const groupWithConnFromLimiter = new Bottleneck.Group({
+const groupWithConnFromLimiter = new Pacejs.Group({
   connection: limiterWithConn.connection
 })
 
 
-const batcher = new Bottleneck.Batcher({
+const batcher = new Pacejs.Batcher({
   maxTime: 1000,
   maxSize: 10
 })
@@ -319,7 +319,7 @@ batcher.on("batch", (batch) => {
   console.log("Number of elements:", len)
 })
 
-batcher.on("error", (err: Bottleneck.BottleneckError) => {
+batcher.on("error", (err: Pacejs.PacejsError) => {
   console.log(err.message)
 })
 
@@ -328,7 +328,7 @@ batcher.add({ xyz: 5 })
 .then(() => console.log("Flushed!"))
 
 const object = {}
-const emitter = new Bottleneck.Events(object)
+const emitter = new Pacejs.Events(object)
 const listenerCount: number = emitter.listenerCount('info')
 emitter.trigger('info', 'hello', 'world', 123).then(function (result) {
   console.log(result)

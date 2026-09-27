@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Bottleneck = require('./bottleneck')
+var Pacejs = require('./pacejs')
 var assert = require('assert')
 var Redis = require('redis')
 
@@ -22,7 +22,7 @@ if (process.env.DATASTORE === 'redis') {
     })
 
     it('Should accept existing connections', function () {
-      var connection = new Bottleneck.RedisConnection()
+      var connection = new Pacejs.RedisConnection()
       connection.id = 'super-connection'
       c = makeTest({
         minTime: 50,
@@ -52,7 +52,7 @@ if (process.env.DATASTORE === 'redis') {
       var client = Redis.createClient()
       client.id = 'super-client'
 
-      var connection = new Bottleneck.RedisConnection({ client })
+      var connection = new Pacejs.RedisConnection({ client })
       connection.id = 'super-connection'
       c = makeTest({
         minTime: 50,
@@ -80,7 +80,7 @@ if (process.env.DATASTORE === 'redis') {
     })
 
     it('Should trigger error events on the shared connection', function (done) {
-      var connection = new Bottleneck.RedisConnection({
+      var connection = new Pacejs.RedisConnection({
         clientOptions: {
           port: 1
         }

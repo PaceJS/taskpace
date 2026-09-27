@@ -1,7 +1,7 @@
 var States = require('../lib/States')
 var assert = require('assert')
 var c = require('./context')({datastore: 'local'})
-var Bottleneck = require('./bottleneck')
+var Pacejs = require('./pacejs')
 
 describe('States', function () {
 
@@ -95,7 +95,7 @@ describe('States', function () {
       states.statusJobs('Z')
     } catch (err) {
       if (process.env.BUILD !== 'es5' && process.env.BUILD !== 'light') {
-        assert(err instanceof Bottleneck.BottleneckError)
+        assert(err instanceof Pacejs.PacejsError)
       }
       done()
     }

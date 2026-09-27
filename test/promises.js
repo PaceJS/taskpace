@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Bottleneck = require('./bottleneck')
+var Pacejs = require('./pacejs')
 var assert = require('assert')
 
 describe('Promises', function () {
@@ -49,7 +49,7 @@ describe('Promises', function () {
       maxConcurrent: 1,
       minTime: 0,
       highWater: 1,
-      strategy: Bottleneck.strategy.OVERFLOW,
+      strategy: Pacejs.strategy.OVERFLOW,
       rejectOnDrop: true
     })
     var dropped = 0
@@ -66,8 +66,8 @@ describe('Promises', function () {
 
     return c.limiter.schedule({id: 3}, c.slowPromise, 50, null, 3)
     .catch(function (err) {
-      c.mustEqual(err.message, 'This job has been dropped by Bottleneck')
-      assert(err instanceof Bottleneck.BottleneckError)
+      c.mustEqual(err.message, 'This job has been dropped by Pacejs')
+      assert(err instanceof Pacejs.PacejsError)
       caught++
       return Promise.all([p1, p2])
     })

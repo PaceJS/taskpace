@@ -1,5 +1,5 @@
 global.TEST = true
-var Bottleneck = require('./bottleneck')
+var Pacejs = require('./pacejs')
 var assert = require('assert')
 
 module.exports = function (options={}) {
@@ -36,7 +36,7 @@ module.exports = function (options={}) {
     options.datastore = 'local'
   }
 
-  var limiter = new Bottleneck(options)
+  var limiter = new Pacejs(options)
   // limiter.on("debug", function (str, args) { console.log(`${Date.now()-start} ${str} ${JSON.stringify(args)}`) })
   if (!options.errorEventsExpected) {
     limiter.on("error", function (err) {

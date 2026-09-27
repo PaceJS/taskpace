@@ -1,4 +1,4 @@
-BottleneckError = require "./BottleneckError"
+PacejsError = require "./PacejsError"
 class States
   constructor: (@status) ->
     @_jobs = {}
@@ -33,7 +33,7 @@ class States
     if status?
       pos = @status.indexOf status
       if pos < 0
-        throw new BottleneckError "status must be one of #{@status.join ', '}"
+        throw new PacejsError "status must be one of #{@status.join ', '}"
       k for k,v of @_jobs when v == pos
     else
       Object.keys @_jobs

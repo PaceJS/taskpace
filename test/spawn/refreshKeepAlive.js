@@ -1,7 +1,7 @@
-var Bottleneck = require('../bottleneck.js')
+var Pacejs = require('../pacejs.js')
 var now = Date.now()
 
-var limiter = new Bottleneck({
+var limiter = new Pacejs({
   reservoir: 2,
   reservoirRefreshAmount: 2,
   reservoirRefreshInterval: 200

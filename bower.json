@@ -1,10 +1,10 @@
 {
-  "name": "bottleneck",
-  "main": "bottleneck.js",
-  "version": "2.19.5",
-  "homepage": "https://github.com/SGrondin/bottleneck",
+  "name": "pacejs",
+  "main": "pacejs.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/PaceJS/pacejs",
   "authors": [
-    "SGrondin <github@simongrondin.name>"
+    "Tom Hundley"
   ],
   "description": "Distributed task scheduler and rate limiter",
   "moduleType": [

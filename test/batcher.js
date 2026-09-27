@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Bottleneck = require('./bottleneck')
+var Pacejs = require('./pacejs')
 var assert = require('assert')
 
 describe('Batcher', function () {
@@ -11,7 +11,7 @@ describe('Batcher', function () {
 
   it('Should batch by time and size', function () {
     c = makeTest()
-    var batcher = new Bottleneck.Batcher({
+    var batcher = new Pacejs.Batcher({
       maxTime: 50,
       maxSize: 3
     })
@@ -45,7 +45,7 @@ describe('Batcher', function () {
 
   it('Should batch by time', function () {
     c = makeTest()
-    var batcher = new Bottleneck.Batcher({
+    var batcher = new Pacejs.Batcher({
       maxTime: 50
     })
     var t0 = Date.now()
@@ -86,7 +86,7 @@ describe('Batcher', function () {
 
   it('Should batch by size', function () {
     c = makeTest()
-    var batcher = new Bottleneck.Batcher({
+    var batcher = new Pacejs.Batcher({
       maxSize: 2
     })
     var batches = []
@@ -114,7 +114,7 @@ describe('Batcher', function () {
 
   it('Should stagger flushes', function () {
     c = makeTest()
-    var batcher = new Bottleneck.Batcher({
+    var batcher = new Pacejs.Batcher({
       maxTime: 50,
       maxSize: 3
     })
@@ -161,7 +161,7 @@ describe('Batcher', function () {
 
   it('Should force then stagger flushes', function () {
     c = makeTest()
-    var batcher = new Bottleneck.Batcher({
+    var batcher = new Pacejs.Batcher({
       maxTime: 50,
       maxSize: 3
     })

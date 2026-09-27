@@ -15,7 +15,7 @@ class Group
     parser.load @limiterOptions, @defaults, @
     @Events = new Events @
     @instances = {}
-    @Bottleneck = require "./Bottleneck"
+    @Pacejs = require "./Pacejs"
     @_startAutoCleanup()
     @sharedConnection = @connection?
 
@@ -26,7 +26,7 @@ class Group
         @connection = new IORedisConnection Object.assign {}, @limiterOptions, { @Events }
 
   key: (key="") -> @instances[key] ? do =>
-    limiter = @instances[key] = new @Bottleneck Object.assign @limiterOptions, {
+    limiter = @instances[key] = new @Pacejs Object.assign @limiterOptions, {
       id: "#{@id}-#{key}",
       @timeout,
       @connection

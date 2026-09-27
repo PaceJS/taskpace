@@ -1,5 +1,5 @@
 parser = require "./parser"
-BottleneckError = require "./BottleneckError"
+PacejsError = require "./PacejsError"
 
 class LocalDatastore
   constructor: (@instance, @storeOptions, storeInstanceOptions) ->
@@ -120,7 +120,7 @@ class LocalDatastore
   __submit__: (queueLength, weight) ->
     await @yieldLoop()
     if @storeOptions.maxConcurrent? and weight > @storeOptions.maxConcurrent
-      throw new BottleneckError("Impossible to add a job having a weight of #{weight} to a limiter having a maxConcurrent setting of #{@storeOptions.maxConcurrent}")
+      throw new PacejsError("Impossible to add a job having a weight of #{weight} to a limiter having a maxConcurrent setting of #{@storeOptions.maxConcurrent}")
     now = Date.now()
     reachedHWM = @storeOptions.highWater? and queueLength == @storeOptions.highWater and not @check(weight, now)
     blocked = @strategyIsBlock() and (reachedHWM or @isBlocked now)

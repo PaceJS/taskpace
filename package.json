@@ -1,16 +1,16 @@
 {
-  "name": "bottleneck",
-  "version": "2.19.5",
+  "name": "pacejs",
+  "version": "1.0.0",
   "description": "Distributed task scheduler and rate limiter",
   "main": "lib/index.js",
-  "typings": "bottleneck.d.ts",
+  "typings": "pacejs.d.ts",
   "scripts": {
     "test": "mocha test",
     "test-all": "./scripts/test_all.sh"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SGrondin/bottleneck"
+    "url": "https://github.com/PaceJS/pacejs"
   },
   "keywords": [
     "async rate limiter",
@@ -27,11 +27,11 @@
     "clustering"
   ],
   "author": {
-    "name": "Simon Grondin"
+    "name": "Tom Hundley"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SGrondin/bottleneck/issues"
+    "url": "https://github.com/PaceJS/pacejs/issues"
   },
   "devDependencies": {
     "@babel/core": "^7.5.0",
@@ -39,7 +39,6 @@
     "@types/es6-promise": "0.0.33",
     "assert": "^1.5.0",
     "coffeescript": "2.4.x",
-    "ejs-cli": "github:SGrondin/ejs-cli#master",
     "ioredis": "^4.11.1",
     "leakage": "^0.4.0",
     "mocha": "^6.1.4",

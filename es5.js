@@ -1,6 +1,6 @@
 /**
-  * This file contains the full Pacejs library (MIT) compiled to ES5.
-  * https://github.com/PaceJS/pacejs
+  * This file contains the full Taskpace library (MIT) compiled to ES5.
+  * https://github.com/PaceJS/taskpace
   * It also contains the regenerator-runtime (MIT), necessary for Babel-generated ES5 code to execute promise and async/await code.
   * See the following link for Copyright and License information:
   * https://github.com/facebook/regenerator/blob/master/packages/regenerator-runtime/runtime.js
@@ -8,7 +8,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Pacejs = factory());
+	(global.Taskpace = factory());
 }(this, (function () { 'use strict';
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -1449,29 +1449,29 @@
 
 	var Queues_1 = Queues;
 
-	var PacejsError;
+	var TaskpaceError;
 
-	PacejsError =
+	TaskpaceError =
 	/*#__PURE__*/
 	function (_Error) {
-	  _inherits(PacejsError, _Error);
+	  _inherits(TaskpaceError, _Error);
 
-	  function PacejsError() {
-	    _classCallCheck(this, PacejsError);
+	  function TaskpaceError() {
+	    _classCallCheck(this, TaskpaceError);
 
-	    return _possibleConstructorReturn(this, _getPrototypeOf(PacejsError).apply(this, arguments));
+	    return _possibleConstructorReturn(this, _getPrototypeOf(TaskpaceError).apply(this, arguments));
 	  }
 
-	  return PacejsError;
+	  return TaskpaceError;
 	}(_wrapNativeSuper(Error));
 
-	var PacejsError_1 = PacejsError;
+	var TaskpaceError_1 = TaskpaceError;
 
-	var PacejsError$1, DEFAULT_PRIORITY, Job, NUM_PRIORITIES, parser$1;
+	var TaskpaceError$1, DEFAULT_PRIORITY, Job, NUM_PRIORITIES, parser$1;
 	NUM_PRIORITIES = 10;
 	DEFAULT_PRIORITY = 5;
 	parser$1 = parser;
-	PacejsError$1 = PacejsError_1;
+	TaskpaceError$1 = TaskpaceError_1;
 
 	Job =
 	/*#__PURE__*/
@@ -1526,11 +1526,11 @@
 	      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
 	          error = _ref.error,
 	          _ref$message = _ref.message,
-	          message = _ref$message === void 0 ? "This job has been dropped by Pacejs" : _ref$message;
+	          message = _ref$message === void 0 ? "This job has been dropped by Taskpace" : _ref$message;
 
 	      if (this._states.remove(this.options.id)) {
 	        if (this.rejectOnDrop) {
-	          this._reject(error != null ? error : new PacejsError$1(message));
+	          this._reject(error != null ? error : new TaskpaceError$1(message));
 	        }
 
 	        this.Events.trigger("dropped", {
@@ -1551,7 +1551,7 @@
 	      status = this._states.jobStatus(this.options.id);
 
 	      if (!(status === expected || expected === "DONE" && status === null)) {
-	        throw new PacejsError$1("Invalid job status ".concat(status, ", expected ").concat(expected, ". Please open an issue at https://github.com/PaceJS/pacejs/issues"));
+	        throw new TaskpaceError$1("Invalid job status ".concat(status, ", expected ").concat(expected, ". Please open an issue at https://github.com/PaceJS/taskpace/issues"));
 	      }
 	    }
 	  }, {
@@ -1680,7 +1680,7 @@
 	        options: this.options,
 	        retryCount: this.retryCount
 	      };
-	      error = new PacejsError$1("This job timed out after ".concat(this.options.expiration, " ms."));
+	      error = new TaskpaceError$1("This job timed out after ".concat(this.options.expiration, " ms."));
 	      return this._onFailure(error, eventInfo, clearGlobalState, run, free);
 	    }
 	  }, {
@@ -1755,9 +1755,9 @@
 
 	var Job_1 = Job;
 
-	var PacejsError$2, LocalDatastore, parser$2;
+	var TaskpaceError$2, LocalDatastore, parser$2;
 	parser$2 = parser;
-	PacejsError$2 = PacejsError_1;
+	TaskpaceError$2 = TaskpaceError_1;
 
 	LocalDatastore =
 	/*#__PURE__*/
@@ -2259,7 +2259,7 @@
 	                  break;
 	                }
 
-	                throw new PacejsError$2("Impossible to add a job having a weight of ".concat(weight, " to a limiter having a maxConcurrent setting of ").concat(this.storeOptions.maxConcurrent));
+	                throw new TaskpaceError$2("Impossible to add a job having a weight of ".concat(weight, " to a limiter having a maxConcurrent setting of ").concat(this.storeOptions.maxConcurrent));
 
 	              case 4:
 	                now = Date.now();
@@ -2554,7 +2554,7 @@
 	      parser$3.load(options, this.defaults, this);
 
 	      if (this.Redis == null) {
-	        this.Redis = eval("require")("redis"); // Obfuscated or else Webpack/Angular will try to inline the optional redis module. To override this behavior: pass the redis module to Pacejs as the 'Redis' option.
+	        this.Redis = eval("require")("redis"); // Obfuscated or else Webpack/Angular will try to inline the optional redis module. To override this behavior: pass the redis module to Taskpace as the 'Redis' option.
 	      }
 
 	      if (this.Events == null) {
@@ -2811,7 +2811,7 @@
 	      parser$4.load(options, this.defaults, this);
 
 	      if (this.Redis == null) {
-	        this.Redis = eval("require")("ioredis"); // Obfuscated or else Webpack/Angular will try to inline the optional ioredis module. To override this behavior: pass the ioredis module to Pacejs as the 'Redis' option.
+	        this.Redis = eval("require")("ioredis"); // Obfuscated or else Webpack/Angular will try to inline the optional ioredis module. To override this behavior: pass the ioredis module to Taskpace as the 'Redis' option.
 	      }
 
 	      if (this.Events == null) {
@@ -3027,9 +3027,9 @@
 
 	var IORedisConnection_1 = IORedisConnection;
 
-	var PacejsError$3, IORedisConnection$1, RedisConnection$1, RedisDatastore, parser$5;
+	var TaskpaceError$3, IORedisConnection$1, RedisConnection$1, RedisDatastore, parser$5;
 	parser$5 = parser;
-	PacejsError$3 = PacejsError_1;
+	TaskpaceError$3 = TaskpaceError_1;
 	RedisConnection$1 = RedisConnection_1;
 	IORedisConnection$1 = IORedisConnection_1;
 
@@ -3604,7 +3604,7 @@
 	                overweight = _e$message$split2[0];
 	                weight = _e$message$split2[1];
 	                maxConcurrent = _e$message$split2[2];
-	                throw new PacejsError$3("Impossible to add a job having a weight of ".concat(weight, " to a limiter having a maxConcurrent setting of ").concat(maxConcurrent));
+	                throw new TaskpaceError$3("Impossible to add a job having a weight of ".concat(weight, " to a limiter having a maxConcurrent setting of ").concat(maxConcurrent));
 
 	              case 23:
 	                throw e;
@@ -3664,8 +3664,8 @@
 
 	var RedisDatastore_1 = RedisDatastore;
 
-	var PacejsError$4, States;
-	PacejsError$4 = PacejsError_1;
+	var TaskpaceError$4, States;
+	TaskpaceError$4 = TaskpaceError_1;
 
 	States =
 	/*#__PURE__*/
@@ -3732,7 +3732,7 @@
 	        pos = this.status.indexOf(status);
 
 	        if (pos < 0) {
-	          throw new PacejsError$4("status must be one of ".concat(this.status.join(', ')));
+	          throw new TaskpaceError$4("status must be one of ".concat(this.status.join(', ')));
 	        }
 
 	        ref = this._jobs;
@@ -3931,7 +3931,7 @@
 	      parser$6.load(this.limiterOptions, this.defaults, this);
 	      this.Events = new Events$4(this);
 	      this.instances = {};
-	      this.Pacejs = Pacejs_1;
+	      this.Taskpace = Taskpace_1;
 
 	      this._startAutoCleanup();
 
@@ -3960,7 +3960,7 @@
 	        var ref;
 	        return (ref = this.instances[_key]) != null ? ref : function () {
 	          var limiter;
-	          limiter = _this.instances[_key] = new _this.Pacejs(Object.assign(_this.limiterOptions, {
+	          limiter = _this.instances[_key] = new _this.Taskpace(Object.assign(_this.limiterOptions, {
 	            id: "".concat(_this.id, "-").concat(_key),
 	            timeout: _this.timeout,
 	            connection: _this.connection
@@ -4303,7 +4303,7 @@
 
 	var require$$8 = getCjsExportFromNamespace(version$2);
 
-	var Pacejs,
+	var Taskpace,
 	    DEFAULT_PRIORITY$1,
 	    Events$6,
 	    Job$1,
@@ -4326,16 +4326,16 @@
 	States$1 = States_1;
 	Sync$1 = Sync_1;
 
-	Pacejs = function () {
-	  var Pacejs =
+	Taskpace = function () {
+	  var Taskpace =
 	  /*#__PURE__*/
 	  function () {
-	    function Pacejs() {
+	    function Taskpace() {
 	      var _this = this;
 
 	      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-	      _classCallCheck(this, Pacejs);
+	      _classCallCheck(this, Taskpace);
 
 	      var storeInstanceOptions, storeOptions;
 	      this._addToQueue = this._addToQueue.bind(this);
@@ -4364,7 +4364,7 @@
 	          storeInstanceOptions = parser$8.load(options, this.localStoreDefaults, {});
 	          return new LocalDatastore$1(this, storeOptions, storeInstanceOptions);
 	        } else {
-	          throw new Pacejs.prototype.PacejsError("Invalid datastore type: ".concat(this.datastore));
+	          throw new Taskpace.prototype.TaskpaceError("Invalid datastore type: ".concat(this.datastore));
 	        }
 	      }.call(this);
 
@@ -4379,11 +4379,11 @@
 	      });
 	    }
 
-	    _createClass(Pacejs, [{
+	    _createClass(Taskpace, [{
 	      key: "_validateOptions",
 	      value: function _validateOptions(options, invalid) {
 	        if (!(options != null && _typeof(options) === "object" && invalid.length === 0)) {
-	          throw new Pacejs.prototype.PacejsError("Pacejs v2 takes a single object argument. Refer to https://github.com/PaceJS/pacejs#upgrading-to-v2 if you're upgrading from Pacejs v1.");
+	          throw new Taskpace.prototype.TaskpaceError("Taskpace v2 takes a single object argument. Refer to https://github.com/PaceJS/taskpace#upgrading-to-v2 if you're upgrading from Taskpace v1.");
 	        }
 	      }
 	    }, {
@@ -4715,11 +4715,11 @@
 	        });
 
 	        this._receive = function (job) {
-	          return job._reject(new Pacejs.prototype.PacejsError(options.enqueueErrorMessage));
+	          return job._reject(new Taskpace.prototype.TaskpaceError(options.enqueueErrorMessage));
 	        };
 
 	        this.stop = function () {
-	          return _this5.Promise.reject(new Pacejs.prototype.PacejsError("stop() has already been called"));
+	          return _this5.Promise.reject(new Taskpace.prototype.TaskpaceError("stop() has already been called"));
 	        };
 
 	        return done;
@@ -4779,13 +4779,13 @@
 	                    break;
 	                  }
 
-	                  shifted = strategy === Pacejs.prototype.strategy.LEAK ? this._queues.shiftLastFrom(options.priority) : strategy === Pacejs.prototype.strategy.OVERFLOW_PRIORITY ? this._queues.shiftLastFrom(options.priority + 1) : strategy === Pacejs.prototype.strategy.OVERFLOW ? job : void 0;
+	                  shifted = strategy === Taskpace.prototype.strategy.LEAK ? this._queues.shiftLastFrom(options.priority) : strategy === Taskpace.prototype.strategy.OVERFLOW_PRIORITY ? this._queues.shiftLastFrom(options.priority + 1) : strategy === Taskpace.prototype.strategy.OVERFLOW ? job : void 0;
 
 	                  if (shifted != null) {
 	                    shifted.doDrop();
 	                  }
 
-	                  if (!(shifted == null || strategy === Pacejs.prototype.strategy.OVERFLOW)) {
+	                  if (!(shifted == null || strategy === Taskpace.prototype.strategy.OVERFLOW)) {
 	                    _context2.next = 28;
 	                    break;
 	                  }
@@ -4825,7 +4825,7 @@
 	      key: "_receive",
 	      value: function _receive(job) {
 	        if (this._states.jobStatus(job.options.id) != null) {
-	          job._reject(new Pacejs.prototype.PacejsError("A job with the same id already exists (id=".concat(job.options.id, ")")));
+	          job._reject(new Taskpace.prototype.TaskpaceError("A job with the same id already exists (id=".concat(job.options.id, ")")));
 
 	          return false;
 	        } else {
@@ -4988,33 +4988,33 @@
 	      }
 	    }]);
 
-	    return Pacejs;
+	    return Taskpace;
 	  }();
-	  Pacejs["default"] = Pacejs;
-	  Pacejs.Events = Events$6;
-	  Pacejs.version = Pacejs.prototype.version = require$$8.version;
-	  Pacejs.strategy = Pacejs.prototype.strategy = {
+	  Taskpace["default"] = Taskpace;
+	  Taskpace.Events = Events$6;
+	  Taskpace.version = Taskpace.prototype.version = require$$8.version;
+	  Taskpace.strategy = Taskpace.prototype.strategy = {
 	    LEAK: 1,
 	    OVERFLOW: 2,
 	    OVERFLOW_PRIORITY: 4,
 	    BLOCK: 3
 	  };
-	  Pacejs.PacejsError = Pacejs.prototype.PacejsError = PacejsError_1;
-	  Pacejs.Group = Pacejs.prototype.Group = Group_1;
-	  Pacejs.RedisConnection = Pacejs.prototype.RedisConnection = RedisConnection_1;
-	  Pacejs.IORedisConnection = Pacejs.prototype.IORedisConnection = IORedisConnection_1;
-	  Pacejs.Batcher = Pacejs.prototype.Batcher = Batcher_1;
-	  Pacejs.prototype.jobDefaults = {
+	  Taskpace.TaskpaceError = Taskpace.prototype.TaskpaceError = TaskpaceError_1;
+	  Taskpace.Group = Taskpace.prototype.Group = Group_1;
+	  Taskpace.RedisConnection = Taskpace.prototype.RedisConnection = RedisConnection_1;
+	  Taskpace.IORedisConnection = Taskpace.prototype.IORedisConnection = IORedisConnection_1;
+	  Taskpace.Batcher = Taskpace.prototype.Batcher = Batcher_1;
+	  Taskpace.prototype.jobDefaults = {
 	    priority: DEFAULT_PRIORITY$1,
 	    weight: 1,
 	    expiration: null,
 	    id: "<no-id>"
 	  };
-	  Pacejs.prototype.storeDefaults = {
+	  Taskpace.prototype.storeDefaults = {
 	    maxConcurrent: null,
 	    minTime: 0,
 	    highWater: null,
-	    strategy: Pacejs.prototype.strategy.LEAK,
+	    strategy: Taskpace.prototype.strategy.LEAK,
 	    penalty: null,
 	    reservoir: null,
 	    reservoirRefreshInterval: null,
@@ -5023,12 +5023,12 @@
 	    reservoirIncreaseAmount: null,
 	    reservoirIncreaseMaximum: null
 	  };
-	  Pacejs.prototype.localStoreDefaults = {
+	  Taskpace.prototype.localStoreDefaults = {
 	    Promise: Promise,
 	    timeout: null,
 	    heartbeatInterval: 250
 	  };
-	  Pacejs.prototype.redisStoreDefaults = {
+	  Taskpace.prototype.redisStoreDefaults = {
 	    Promise: Promise,
 	    timeout: null,
 	    heartbeatInterval: 5000,
@@ -5039,7 +5039,7 @@
 	    clearDatastore: false,
 	    connection: null
 	  };
-	  Pacejs.prototype.instanceDefaults = {
+	  Taskpace.prototype.instanceDefaults = {
 	    datastore: "local",
 	    connection: null,
 	    id: "<no-id>",
@@ -5047,17 +5047,17 @@
 	    trackDoneStatus: false,
 	    Promise: Promise
 	  };
-	  Pacejs.prototype.stopDefaults = {
+	  Taskpace.prototype.stopDefaults = {
 	    enqueueErrorMessage: "This limiter has been stopped and cannot accept new jobs.",
 	    dropWaitingJobs: true,
 	    dropErrorMessage: "This limiter has been stopped."
 	  };
-	  return Pacejs;
+	  return Taskpace;
 	}.call(commonjsGlobal);
 
-	var Pacejs_1 = Pacejs;
+	var Taskpace_1 = Taskpace;
 
-	var es5 = Pacejs_1;
+	var es5 = Taskpace_1;
 
 	return es5;
 

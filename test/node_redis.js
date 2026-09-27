@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Pacejs = require('./pacejs')
+var Taskpace = require('./taskpace')
 var assert = require('assert')
 var Redis = require('redis')
 
@@ -22,7 +22,7 @@ if (process.env.DATASTORE === 'redis') {
     })
 
     it('Should accept existing connections', function () {
-      var connection = new Pacejs.RedisConnection()
+      var connection = new Taskpace.RedisConnection()
       connection.id = 'super-connection'
       c = makeTest({
         minTime: 50,
@@ -52,7 +52,7 @@ if (process.env.DATASTORE === 'redis') {
       var client = Redis.createClient()
       client.id = 'super-client'
 
-      var connection = new Pacejs.RedisConnection({ client })
+      var connection = new Taskpace.RedisConnection({ client })
       connection.id = 'super-connection'
       c = makeTest({
         minTime: 50,
@@ -80,7 +80,7 @@ if (process.env.DATASTORE === 'redis') {
     })
 
     it('Should trigger error events on the shared connection', function (done) {
-      var connection = new Pacejs.RedisConnection({
+      var connection = new Taskpace.RedisConnection({
         clientOptions: {
           port: 1
         }

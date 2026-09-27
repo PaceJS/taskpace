@@ -1,5 +1,5 @@
 parser = require "./parser"
-PacejsError = require "./PacejsError"
+TaskpaceError = require "./TaskpaceError"
 RedisConnection = require "./RedisConnection"
 IORedisConnection = require "./IORedisConnection"
 
@@ -147,7 +147,7 @@ class RedisDatastore
     catch e
       if e.message.indexOf("OVERWEIGHT") == 0
         [overweight, weight, maxConcurrent] = e.message.split ":"
-        throw new PacejsError("Impossible to add a job having a weight of #{weight} to a limiter having a maxConcurrent setting of #{maxConcurrent}")
+        throw new TaskpaceError("Impossible to add a job having a weight of #{weight} to a limiter having a maxConcurrent setting of #{maxConcurrent}")
       else
         throw e
 

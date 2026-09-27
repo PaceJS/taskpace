@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Pacejs = require('./pacejs')
+var Taskpace = require('./taskpace')
 var assert = require('assert')
 var child_process = require('child_process')
 

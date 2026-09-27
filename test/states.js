@@ -1,7 +1,7 @@
 var States = require('../lib/States')
 var assert = require('assert')
 var c = require('./context')({datastore: 'local'})
-var Pacejs = require('./pacejs')
+var Taskpace = require('./taskpace')
 
 describe('States', function () {
 
@@ -95,7 +95,7 @@ describe('States', function () {
       states.statusJobs('Z')
     } catch (err) {
       if (process.env.BUILD !== 'es5' && process.env.BUILD !== 'light') {
-        assert(err instanceof Pacejs.PacejsError)
+        assert(err instanceof Taskpace.TaskpaceError)
       }
       done()
     }

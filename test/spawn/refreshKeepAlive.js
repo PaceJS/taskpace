@@ -1,7 +1,7 @@
-var Pacejs = require('../pacejs.js')
+var Taskpace = require('../taskpace.js')
 var now = Date.now()
 
-var limiter = new Pacejs({
+var limiter = new Taskpace({
   reservoir: 2,
   reservoirRefreshAmount: 2,
   reservoirRefreshInterval: 200

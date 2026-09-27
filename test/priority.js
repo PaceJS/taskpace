@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Pacejs = require('./pacejs')
+var Taskpace = require('./taskpace')
 var assert = require('assert')
 
 describe('Priority', function () {
@@ -33,7 +33,7 @@ describe('Priority', function () {
       maxConcurrent: 1,
       minTime: 100,
       highWater: 3,
-      strategy: Pacejs.strategy.LEAK,
+      strategy: Taskpace.strategy.LEAK,
       rejectOnDrop: false
     })
 
@@ -66,7 +66,7 @@ describe('Priority', function () {
       maxConcurrent: 1,
       minTime: 100,
       highWater: 2,
-      strategy: Pacejs.strategy.OVERFLOW,
+      strategy: Taskpace.strategy.OVERFLOW,
       rejectOnDrop: false
     })
     var called = false
@@ -101,7 +101,7 @@ describe('Priority', function () {
       maxConcurrent: 1,
       minTime: 100,
       highWater: 2,
-      strategy: Pacejs.strategy.OVERFLOW_PRIORITY,
+      strategy: Taskpace.strategy.OVERFLOW_PRIORITY,
       rejectOnDrop: false
     })
     var called = false
@@ -137,7 +137,7 @@ describe('Priority', function () {
       minTime: 100,
       highWater: 2,
       trackDoneStatus: true,
-      strategy: Pacejs.strategy.BLOCK
+      strategy: Taskpace.strategy.BLOCK
     })
     var called = 0
 
@@ -152,8 +152,8 @@ describe('Priority', function () {
           return c.limiter.schedule(c.job, null, 8)
         })
         .catch(function (err) {
-          assert(err instanceof Pacejs.PacejsError)
-          c.mustEqual(err.message, 'This job has been dropped by Pacejs')
+          assert(err instanceof Taskpace.TaskpaceError)
+          c.mustEqual(err.message, 'This job has been dropped by Taskpace')
           c.limiter.removeAllListeners('error')
           done()
         })

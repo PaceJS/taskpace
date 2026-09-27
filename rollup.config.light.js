@@ -3,12 +3,12 @@ import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
 
 const bannerLines = [
-  'This file contains the Pacejs library (MIT), compiled to ES2017, and without Clustering support.',
-  'https://github.com/PaceJS/pacejs',
+  'This file contains the Taskpace library (MIT), compiled to ES2017, and without Clustering support.',
+  'https://github.com/PaceJS/taskpace',
 ].map(x => `  * ${x}`).join('\n');
 const banner = `/**\n${bannerLines}\n  */`;
 
-const missing = `export default () => console.log('You must import the full version of Pacejs in order to use this feature.');`;
+const missing = `export default () => console.log('You must import the full version of Taskpace in order to use this feature.');`;
 const exclude = [
   'RedisDatastore.js',
   'RedisConnection.js',
@@ -19,7 +19,7 @@ const exclude = [
 export default {
   input: 'lib/index.js',
   output: {
-    name: 'Pacejs',
+    name: 'Taskpace',
     file: 'light.js',
     sourcemap: false,
     globals: {},

@@ -1,3 +1,3 @@
 require("regenerator-runtime/runtime")
 
-module.exports = require "./Pacejs"
+module.exports = require "./Taskpace"

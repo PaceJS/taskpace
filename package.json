@@ -1,16 +1,16 @@
 {
-  "name": "pacejs",
+  "name": "taskpace",
   "version": "1.0.0",
   "description": "Distributed task scheduler and rate limiter",
   "main": "lib/index.js",
-  "typings": "pacejs.d.ts",
+  "typings": "taskpace.d.ts",
   "scripts": {
     "test": "mocha test",
     "test-all": "./scripts/test_all.sh"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/PaceJS/pacejs"
+    "url": "https://github.com/PaceJS/taskpace"
   },
   "keywords": [
     "async rate limiter",
@@ -31,7 +31,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PaceJS/pacejs/issues"
+    "url": "https://github.com/PaceJS/taskpace/issues"
   },
   "devDependencies": {
     "@babel/core": "^7.5.0",

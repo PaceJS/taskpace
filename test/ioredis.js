@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Pacejs = require('./pacejs')
+var Taskpace = require('./taskpace')
 var assert = require('assert')
 var Redis = require('ioredis')
 
@@ -41,7 +41,7 @@ if (process.env.DATASTORE === 'ioredis') {
 
     it('Should connect in Redis Cluster mode with premade client', function () {
       var client = new Redis.Cluster('')
-      var connection = new Pacejs.IORedisConnection({ client })
+      var connection = new Taskpace.IORedisConnection({ client })
       c = makeTest({
         maxConcurrent: 2,
         clientOptions: {},
@@ -57,7 +57,7 @@ if (process.env.DATASTORE === 'ioredis') {
     })
 
     it('Should accept existing connections', function () {
-      var connection = new Pacejs.IORedisConnection()
+      var connection = new Taskpace.IORedisConnection()
       connection.id = 'super-connection'
       c = makeTest({
         minTime: 50,
@@ -87,7 +87,7 @@ if (process.env.DATASTORE === 'ioredis') {
       var client = new Redis()
       client.id = 'super-client'
 
-      var connection = new Pacejs.IORedisConnection({ client })
+      var connection = new Taskpace.IORedisConnection({ client })
       connection.id = 'super-connection'
       c = makeTest({
         minTime: 50,
@@ -115,7 +115,7 @@ if (process.env.DATASTORE === 'ioredis') {
     })
 
     it('Should trigger error events on the shared connection', function (done) {
-      var connection = new Pacejs.IORedisConnection({
+      var connection = new Taskpace.IORedisConnection({
         clientOptions: {
           port: 1
         }

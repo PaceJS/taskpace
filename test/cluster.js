@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Pacejs = require('./pacejs')
+var Taskpace = require('./taskpace')
 var Scripts = require('../lib/Scripts.js')
 var assert = require('assert')
 var packagejson = require('../package.json')
@@ -59,7 +59,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
     it('Should allow passing a limiter\'s connection to a new limiter', function () {
       c = makeTest()
       c.limiter.connection.id = 'some-id'
-      var limiter = new Pacejs({
+      var limiter = new Taskpace({
         minTime: 50,
         connection: c.limiter.connection
       })
@@ -84,7 +84,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
     it('Should allow passing a limiter\'s connection to a new Group', function () {
       c = makeTest()
       c.limiter.connection.id = 'some-id'
-      var group = new Pacejs.Group({
+      var group = new Taskpace.Group({
         minTime: 50,
         connection: c.limiter.connection
       })
@@ -113,7 +113,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should allow passing a Group\'s connection to a new limiter', function () {
       c = makeTest()
-      var group = new Pacejs.Group({
+      var group = new Taskpace.Group({
         minTime: 50,
         datastore: process.env.DATASTORE,
         clearDatastore: true
@@ -121,7 +121,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
       group.connection.id = 'some-id'
 
       var limiter1 = group.key('A')
-      var limiter2 = new Pacejs({
+      var limiter2 = new Taskpace({
         minTime: 50,
         connection: group.connection
       })
@@ -148,14 +148,14 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should allow passing a Group\'s connection to a new Group', function () {
       c = makeTest()
-      var group1 = new Pacejs.Group({
+      var group1 = new Taskpace.Group({
         minTime: 50,
         datastore: process.env.DATASTORE,
         clearDatastore: true
       })
       group1.connection.id = 'some-id'
 
-      var group2 = new Pacejs.Group({
+      var group2 = new Taskpace.Group({
         minTime: 50,
         connection: group1.connection,
         clearDatastore: true
@@ -242,7 +242,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
       const settings_key = limiterKeys(c.limiter)[0]
       await runCommand(c.limiter, 'hincrby', [settings_key, 'lastReservoirIncrease', -3000])
 
-      const limiter2 = new Pacejs({ ...settings, datastore: process.env.DATASTORE })
+      const limiter2 = new Taskpace({ ...settings, datastore: process.env.DATASTORE })
       await limiter2.ready()
 
       c.mustEqual(await c.limiter.currentReservoir(), 62) // 2 + ((3000 / 100) * 2) === 62
@@ -265,7 +265,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         ])
       })
       .then(function () {
-        limiter2 = new Pacejs({
+        limiter2 = new Taskpace({
           id: 'migrate',
           datastore: process.env.DATASTORE
         })
@@ -312,7 +312,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 1,
         trackDoneStatus: true
       })
-      var limiter2 = new Pacejs({
+      var limiter2 = new Taskpace({
         datastore: process.env.DATASTORE,
         id: 'queues',
         maxConcurrent: 1,
@@ -366,7 +366,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
       return c.limiter.ready()
       .then(function () {
-        limiter2 = new Pacejs({ datastore: process.env.DATASTORE })
+        limiter2 = new Taskpace({ datastore: process.env.DATASTORE })
         return limiter2.ready()
       })
       .then(function () {
@@ -397,7 +397,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
       return c.limiter.ready()
       .then(function () {
-        limiter2 = new Pacejs({
+        limiter2 = new Taskpace({
           datastore: process.env.DATASTORE,
         })
         return limiter2.ready()
@@ -446,8 +446,8 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         errorEventsExpected: true
       })
       var clientId = c.limiter._store.clientId
-      var limiter1 = new Pacejs({ datastore: process.env.DATASTORE })
-      var limiter2 = new Pacejs({
+      var limiter1 = new Taskpace({ datastore: process.env.DATASTORE })
+      var limiter2 = new Taskpace({
           id: 'lost',
           datastore: process.env.DATASTORE,
           heartbeatInterval: 150
@@ -579,7 +579,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         clientTimeout: 100,
         heartbeat: 50
       })
-      const limiter2 = new Pacejs({
+      const limiter2 = new Taskpace({
         id: 'unresponsive',
         datastore: process.env.DATASTORE
       })
@@ -617,7 +617,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         clientTimeout: 200,
         heartbeat: 2000
       })
-      const limiter2 = new Pacejs({
+      const limiter2 = new Taskpace({
         id: 'unresponsive-unexpired',
         datastore: process.env.DATASTORE
       })
@@ -661,7 +661,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         clientTimeout: 200,
         heartbeat: 2000
       })
-      const limiter2 = new Pacejs({
+      const limiter2 = new Taskpace({
         id: 'unresponsive-expired',
         datastore: process.env.DATASTORE
       })
@@ -708,7 +708,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should use shared settings', function () {
       c = makeTest({ maxConcurrent: 2 })
-      var limiter2 = new Pacejs({ maxConcurrent: 1, datastore: process.env.DATASTORE })
+      var limiter2 = new Taskpace({ maxConcurrent: 1, datastore: process.env.DATASTORE })
 
       return Promise.all([
         limiter2.schedule(c.slowPromise, 100, null, 1),
@@ -732,7 +732,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
       return c.limiter.ready()
       .then(function () {
-        limiter2 = new Pacejs({ maxConcurrent: 1, datastore: process.env.DATASTORE, clearDatastore: true })
+        limiter2 = new Taskpace({ maxConcurrent: 1, datastore: process.env.DATASTORE, clearDatastore: true })
         return limiter2.ready()
       })
       .then(function () {
@@ -777,8 +777,8 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should chain local and distributed limiters (total concurrency)', function () {
       c = makeTest({ id: 'limiter1', maxConcurrent: 3 })
-      var limiter2 = new Pacejs({ id: 'limiter2', maxConcurrent: 1 })
-      var limiter3 = new Pacejs({ id: 'limiter3', maxConcurrent: 2 })
+      var limiter2 = new Taskpace({ id: 'limiter2', maxConcurrent: 1 })
+      var limiter3 = new Taskpace({ id: 'limiter3', maxConcurrent: 2 })
 
       limiter2.on('error', (err) => console.log(err))
 
@@ -811,8 +811,8 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should chain local and distributed limiters (partial concurrency)', function () {
       c = makeTest({ maxConcurrent: 2 })
-      var limiter2 = new Pacejs({ maxConcurrent: 1 })
-      var limiter3 = new Pacejs({ maxConcurrent: 2 })
+      var limiter2 = new Taskpace({ maxConcurrent: 1 })
+      var limiter3 = new Taskpace({ maxConcurrent: 2 })
 
       limiter2.chain(c.limiter)
       limiter3.chain(c.limiter)
@@ -844,7 +844,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
     it('Should use the limiter ID to build Redis keys', function () {
       c = makeTest()
       var randomId = c.limiter._randomIndex()
-      var limiter = new Pacejs({ id: randomId, datastore: process.env.DATASTORE, clearDatastore: true })
+      var limiter = new Taskpace({ id: randomId, datastore: process.env.DATASTORE, clearDatastore: true })
 
       return limiter.ready()
       .then(function () {
@@ -860,7 +860,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should not fail when Redis data is missing', function () {
       c = makeTest()
-      var limiter = new Pacejs({ datastore: process.env.DATASTORE, clearDatastore: true })
+      var limiter = new Taskpace({ datastore: process.env.DATASTORE, clearDatastore: true })
 
       return limiter.running()
       .then(function (running) {
@@ -887,7 +887,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should drop all jobs in the Cluster when entering blocked mode', function () {
       c = makeTest()
-      var limiter1 = new Pacejs({
+      var limiter1 = new Taskpace({
         id: 'blocked',
         trackDoneStatus: true,
         datastore: process.env.DATASTORE,
@@ -896,14 +896,14 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 1,
         minTime: 50,
         highWater: 2,
-        strategy: Pacejs.strategy.BLOCK
+        strategy: Taskpace.strategy.BLOCK
       })
       var limiter2
       var client_num_queued_key = limiterKeys(limiter1)[5]
 
       return limiter1.ready()
       .then(function () {
-        limiter2 = new Pacejs({
+        limiter2 = new Taskpace({
           id: 'blocked',
           trackDoneStatus: true,
           datastore: process.env.DATASTORE,
@@ -974,13 +974,13 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         minTime: 100,
         id: 'super-duper'
       })
-      var limiter1 = new Pacejs({
+      var limiter1 = new Taskpace({
         maxConcurrent: 1,
         minTime: 100,
         id: 'super-duper',
         datastore: process.env.DATASTORE
       })
-      var limiter2 = new Pacejs({
+      var limiter2 = new Taskpace({
         maxConcurrent: 1,
         minTime: 100,
         id: 'nope',
@@ -1013,7 +1013,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should pass messages to correct limiter after Group re-instantiations', function () {
       c = makeTest()
-      var group = new Pacejs.Group({
+      var group = new Taskpace.Group({
         maxConcurrent: 1,
         minTime: 100,
         datastore: process.env.DATASTORE
@@ -1062,7 +1062,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should have a default key TTL when using Groups', function () {
       c = makeTest()
-      var group = new Pacejs.Group({
+      var group = new Taskpace.Group({
         datastore: process.env.DATASTORE
       })
 
@@ -1082,7 +1082,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should support Groups and expire Redis keys', function () {
       c = makeTest()
-      var group = new Pacejs.Group({
+      var group = new Taskpace.Group({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         minTime: 50,
@@ -1151,7 +1151,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should not recreate a key when running heartbeat', function () {
       c = makeTest()
-      var group = new Pacejs.Group({
+      var group = new Taskpace.Group({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         maxConcurrent: 50,
@@ -1181,14 +1181,14 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should delete Redis key when manually deleting a group key', function () {
       c = makeTest()
-      var group1 = new Pacejs.Group({
+      var group1 = new Taskpace.Group({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         maxConcurrent: 50,
         minTime: 50,
         timeout: 300
       })
-      var group2 = new Pacejs.Group({
+      var group2 = new Taskpace.Group({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         maxConcurrent: 50,
@@ -1229,14 +1229,14 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should delete Redis keys from a group even when the local limiter is not present', function () {
       c = makeTest()
-      var group1 = new Pacejs.Group({
+      var group1 = new Taskpace.Group({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         maxConcurrent: 50,
         minTime: 50,
         timeout: 300
       })
-      var group2 = new Pacejs.Group({
+      var group2 = new Taskpace.Group({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         maxConcurrent: 50,
@@ -1274,13 +1274,13 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should returns all Group keys in the cluster', async function () {
       c = makeTest()
-      var group1 = new Pacejs.Group({
+      var group1 = new Taskpace.Group({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'same',
         timeout: 3000
       })
-      var group2 = new Pacejs.Group({
+      var group2 = new Taskpace.Group({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'same',
@@ -1304,7 +1304,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         both.sort()
       )
 
-      var group3 = new Pacejs.Group({ datastore: 'local' })
+      var group3 = new Taskpace.Group({ datastore: 'local' })
       c.mustEqual(await group3.clusterKeys(), [])
 
       await group1.disconnect(false)
@@ -1313,7 +1313,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should queue up the least busy limiter', async function () {
       c = makeTest()
-      var limiter1 = new Pacejs({
+      var limiter1 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'busy',
@@ -1321,7 +1321,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 3,
         trackDoneStatus: true
       })
-      var limiter2 = new Pacejs({
+      var limiter2 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'busy',
@@ -1329,7 +1329,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 3,
         trackDoneStatus: true
       })
-      var limiter3 = new Pacejs({
+      var limiter3 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'busy',
@@ -1337,7 +1337,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 3,
         trackDoneStatus: true
       })
-      var limiter4 = new Pacejs({
+      var limiter4 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'busy',
@@ -1405,7 +1405,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should pass the remaining capacity to other limiters', async function () {
       c = makeTest()
-      var limiter1 = new Pacejs({
+      var limiter1 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'busy',
@@ -1413,7 +1413,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 3,
         trackDoneStatus: true
       })
-      var limiter2 = new Pacejs({
+      var limiter2 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'busy',
@@ -1421,7 +1421,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 3,
         trackDoneStatus: true
       })
-      var limiter3 = new Pacejs({
+      var limiter3 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'busy',
@@ -1429,7 +1429,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 3,
         trackDoneStatus: true
       })
-      var limiter4 = new Pacejs({
+      var limiter4 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'busy',
@@ -1492,7 +1492,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
 
     it('Should take the capacity and blacklist if the priority limiter is not responding', async function () {
       c = makeTest()
-      var limiter1 = new Pacejs({
+      var limiter1 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'crash',
@@ -1500,7 +1500,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 1,
         trackDoneStatus: true
       })
-      var limiter2 = new Pacejs({
+      var limiter2 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'crash',
@@ -1508,7 +1508,7 @@ if (process.env.DATASTORE === 'redis' || process.env.DATASTORE === 'ioredis') {
         maxConcurrent: 1,
         trackDoneStatus: true
       })
-      var limiter3 = new Pacejs({
+      var limiter3 = new Taskpace({
         datastore: process.env.DATASTORE,
         clearDatastore: true,
         id: 'crash',

@@ -16,20 +16,20 @@ clean() {
 }
 
 makeLib10() {
-  echo '[B] Compiling Pacejs to Node 10+...'
+  echo '[B] Compiling Taskpace to Node 10+...'
   npx coffee --compile --bare --no-header src/*.coffee
   mv src/*.js lib/
 }
 
 makeLib6() {
-  echo '[B] Compiling Pacejs to Node 6+...'
+  echo '[B] Compiling Taskpace to Node 6+...'
   ln -s .babelrc.lib .babelrc
   npx coffee --compile --bare --no-header --transpile src/*.coffee
   mv src/*.js lib/
 }
 
 makeES5() {
-  echo '[B] Compiling Pacejs to ES5...'
+  echo '[B] Compiling Taskpace to ES5...'
   ln -s .babelrc.es5 .babelrc
   npx coffee --compile --bare --no-header src/*.coffee
   mv src/*.js lib/

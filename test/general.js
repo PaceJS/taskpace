@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Pacejs = require('./pacejs')
+var Taskpace = require('./taskpace')
 var assert = require('assert')
 var child_process = require('child_process')
 
@@ -20,7 +20,7 @@ describe('General', function () {
       const { iterate } = require('leakage')
 
       const result = await iterate.async(async () => {
-        const limiter = new Pacejs({ datastore: 'local' })
+        const limiter = new Taskpace({ datastore: 'local' })
         await limiter.ready()
         return limiter.disconnect(false)
       }, { iterations: 25 })
@@ -31,7 +31,7 @@ describe('General', function () {
       c = makeTest()
       this.timeout(12000)
       const { iterate } = require('leakage')
-      const limiter = new Pacejs({ datastore: 'local', maxConcurrent: 1, minTime: 10 })
+      const limiter = new Taskpace({ datastore: 'local', maxConcurrent: 1, minTime: 10 })
       await limiter.ready()
       var ctr = 0
       var i = 0
@@ -51,9 +51,9 @@ describe('General', function () {
   it('Should prompt to upgrade', function () {
     c = makeTest()
     try {
-      var limiter = new Pacejs(1, 250)
+      var limiter = new Taskpace(1, 250)
     } catch (err) {
-      c.mustEqual(err.message, 'Pacejs v2 takes a single object argument. Refer to https://github.com/PaceJS/pacejs#upgrading-to-v2 if you\'re upgrading from Pacejs v1.')
+      c.mustEqual(err.message, 'Taskpace v2 takes a single object argument. Refer to https://github.com/PaceJS/taskpace#upgrading-to-v2 if you\'re upgrading from Taskpace v1.')
     }
   })
 
@@ -95,7 +95,7 @@ describe('General', function () {
 
     class Hello {
       constructor() {
-        this.emitter = new Pacejs.Events(this)
+        this.emitter = new Taskpace.Events(this)
       }
 
       doSomething() {

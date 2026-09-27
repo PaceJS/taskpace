@@ -1,5 +1,5 @@
-declare module "pacejs" {
-    namespace Pacejs {
+declare module "taskpace" {
+    namespace Taskpace {
         type ConstructorOptions = {
             /**
              * How many jobs can be running at the same time.
@@ -16,9 +16,9 @@ declare module "pacejs" {
             /**
              * Which strategy to use if the queue gets longer than the high water mark.
              */
-            readonly strategy?: Pacejs.Strategy | null;
+            readonly strategy?: Taskpace.Strategy | null;
             /**
-             * The `penalty` value used by the `Pacejs.strategy.BLOCK` strategy.
+             * The `penalty` value used by the `Taskpace.strategy.BLOCK` strategy.
              */
             readonly penalty?: number | null;
             /**
@@ -62,7 +62,7 @@ declare module "pacejs" {
              */
             readonly datastore?: string | null;
             /**
-             * Override the Promise library used by Pacejs.
+             * Override the Promise library used by Taskpace.
              */
             readonly Promise?: any;
             /**
@@ -74,19 +74,19 @@ declare module "pacejs" {
              */
             readonly clusterNodes?: any;
             /**
-             * An existing Pacejs.RedisConnection or Pacejs.IORedisConnection object to use.
+             * An existing Taskpace.RedisConnection or Taskpace.IORedisConnection object to use.
              * If using, `datastore`, `clientOptions` and `clusterNodes` will be ignored.
              */
             /**
-             * Optional Redis/IORedis library from `require('ioredis')` or equivalent. If not, Pacejs will attempt to require Redis/IORedis at runtime.
+             * Optional Redis/IORedis library from `require('ioredis')` or equivalent. If not, Taskpace will attempt to require Redis/IORedis at runtime.
              */
             readonly Redis?: any;
             /**
-             * Pacejs connection object created from `new Pacejs.RedisConnection` or `new Pacejs.IORedisConnection`.
+             * Taskpace connection object created from `new Taskpace.RedisConnection` or `new Taskpace.IORedisConnection`.
              */
-            readonly connection?: Pacejs.RedisConnection | Pacejs.IORedisConnection | null;
+            readonly connection?: Taskpace.RedisConnection | Taskpace.IORedisConnection | null;
             /**
-             * When set to `true`, on initial startup, the limiter will wipe any existing Pacejs state data on the Redis db.
+             * When set to `true`, on initial startup, the limiter will wipe any existing Taskpace state data on the Redis db.
              */
             readonly clearDatastore?: boolean | null;
             /**
@@ -106,7 +106,7 @@ declare module "pacejs" {
              */
             readonly weight?: number | null;
             /**
-             * The number milliseconds a job has to finish. Jobs that take longer than their `expiration` will be failed with a `PacejsError`.
+             * The number milliseconds a job has to finish. Jobs that take longer than their `expiration` will be failed with a `TaskpaceError`.
              */
             readonly expiration?: number | null;
             /**
@@ -130,7 +130,7 @@ declare module "pacejs" {
         };
         type Callback<T> = (err: any, result: T) => void;
         type ClientsList = { client?: any; subscriber?: any };
-        type GroupLimiterPair = { key: string; limiter: Pacejs };
+        type GroupLimiterPair = { key: string; limiter: Taskpace };
         interface Strategy {}
 
         type EventInfo = {
@@ -177,7 +177,7 @@ declare module "pacejs" {
              */
             readonly client?: any;
             /**
-             * Optional Redis library from `require('redis')` or equivalent. If not, Pacejs will attempt to require Redis at runtime.
+             * Optional Redis library from `require('redis')` or equivalent. If not, Taskpace will attempt to require Redis at runtime.
              */
             readonly Redis?: any;
         };
@@ -196,7 +196,7 @@ declare module "pacejs" {
              */
             readonly client?: any;
             /**
-             * Optional IORedis library from `require('ioredis')` or equivalent. If not, Pacejs will attempt to require IORedis at runtime.
+             * Optional IORedis library from `require('ioredis')` or equivalent. If not, Taskpace will attempt to require IORedis at runtime.
              */
             readonly Redis?: any;
         };
@@ -212,11 +212,11 @@ declare module "pacejs" {
             readonly maxSize?: number | null;
         };
 
-        class PacejsError extends Error {
+        class TaskpaceError extends Error {
         }
 
         class RedisConnection {
-            constructor(options?: Pacejs.RedisConnectionOptions);
+            constructor(options?: Taskpace.RedisConnectionOptions);
 
             /**
              * Register an event listener.
@@ -245,7 +245,7 @@ declare module "pacejs" {
         }
 
         class IORedisConnection {
-            constructor(options?: Pacejs.IORedisConnectionOptions);
+            constructor(options?: Taskpace.IORedisConnectionOptions);
 
             /**
              * Register an event listener.
@@ -274,7 +274,7 @@ declare module "pacejs" {
         }
 
         class Batcher {
-            constructor(options?: Pacejs.BatcherOptions);
+            constructor(options?: Taskpace.BatcherOptions);
 
             /**
              * Register an event listener.
@@ -301,17 +301,17 @@ declare module "pacejs" {
         }
 
         class Group {
-            constructor(options?: Pacejs.ConstructorOptions);
+            constructor(options?: Taskpace.ConstructorOptions);
 
             id: string;
             datastore: string;
-            connection?: Pacejs.RedisConnection | Pacejs.IORedisConnection;
+            connection?: Taskpace.RedisConnection | Taskpace.IORedisConnection;
 
             /**
              * Returns the limiter for the specified key.
              * @param str - The limiter key.
              */
-            key(str: string): Pacejs;
+            key(str: string): Taskpace;
 
             /**
              * Register an event listener.
@@ -320,7 +320,7 @@ declare module "pacejs" {
              */
             on(name: string, fn: Function): void;
             on(name: "error", fn: (error: any) => void): void;
-            on(name: "created", fn: (limiter: Pacejs, key: string) => void): void;
+            on(name: "created", fn: (limiter: Taskpace, key: string) => void): void;
 
             /**
              * Register an event listener for one event only.
@@ -329,7 +329,7 @@ declare module "pacejs" {
              */
             once(name: string, fn: Function): void;
             once(name: "error", fn: (error: any) => void): void;
-            once(name: "created", fn: (limiter: Pacejs, key: string) => void): void;
+            once(name: "created", fn: (limiter: Taskpace, key: string) => void): void;
 
             /**
              * Removes all registered event listeners.
@@ -341,7 +341,7 @@ declare module "pacejs" {
              * Updates the group settings.
              * @param options - The new settings.
              */
-            updateSettings(options: Pacejs.ConstructorOptions): void;
+            updateSettings(options: Taskpace.ConstructorOptions): void;
 
             /**
              * Deletes the limiter for the given key.
@@ -359,7 +359,7 @@ declare module "pacejs" {
             /**
              * Returns all the key-limiter pairs.
              */
-            limiters(): Pacejs.GroupLimiterPair[];
+            limiters(): Taskpace.GroupLimiterPair[];
 
             /**
              * Returns all Group keys in the local instance
@@ -390,31 +390,31 @@ declare module "pacejs" {
         }
     }
 
-    class Pacejs {
+    class Taskpace {
         public static readonly strategy: {
             /**
              * When adding a new job to a limiter, if the queue length reaches `highWater`, drop the oldest job with the lowest priority. This is useful when jobs that have been waiting for too long are not important anymore. If all the queued jobs are more important (based on their `priority` value) than the one being added, it will not be added.
              */
-            readonly LEAK: Pacejs.Strategy;
+            readonly LEAK: Taskpace.Strategy;
             /**
              * Same as `LEAK`, except it will only drop jobs that are less important than the one being added. If all the queued jobs are as or more important than the new one, it will not be added.
              */
-            readonly OVERFLOW_PRIORITY: Pacejs.Strategy;
+            readonly OVERFLOW_PRIORITY: Taskpace.Strategy;
             /**
              * When adding a new job to a limiter, if the queue length reaches `highWater`, do not add the new job. This strategy totally ignores priority levels.
              */
-            readonly OVERFLOW: Pacejs.Strategy;
+            readonly OVERFLOW: Taskpace.Strategy;
             /**
              * When adding a new job to a limiter, if the queue length reaches `highWater`, the limiter falls into "blocked mode". All queued jobs are dropped and no new jobs will be accepted until the limiter unblocks. It will unblock after `penalty` milliseconds have passed without receiving a new job. `penalty` is equal to `15 * minTime` (or `5000` if `minTime` is `0`) by default and can be changed by calling `changePenalty()`. This strategy is ideal when bruteforce attacks are to be expected. This strategy totally ignores priority levels.
              */
-            readonly BLOCK: Pacejs.Strategy;
+            readonly BLOCK: Taskpace.Strategy;
         };
 
-        constructor(options?: Pacejs.ConstructorOptions);
+        constructor(options?: Taskpace.ConstructorOptions);
 
         id: string;
         datastore: string;
-        connection?: Pacejs.RedisConnection | Pacejs.IORedisConnection;
+        connection?: Taskpace.RedisConnection | Taskpace.IORedisConnection;
 
         /**
          * Returns a promise which will be resolved once the limiter is ready to accept jobs
@@ -425,7 +425,7 @@ declare module "pacejs" {
         /**
          * Returns a datastore-specific object of redis clients.
          */
-        clients(): Pacejs.ClientsList;
+        clients(): Taskpace.ClientsList;
 
         /**
          * Returns the name of the Redis pubsub channel used for this limiter
@@ -446,17 +446,17 @@ declare module "pacejs" {
         /**
          * Returns an object with the current number of jobs per status.
          */
-        counts(): Pacejs.Counts;
+        counts(): Taskpace.Counts;
 
         /**
          * Returns the status of the job with the provided job id.
          */
-        jobStatus(id: string): Pacejs.Status;
+        jobStatus(id: string): Taskpace.Status;
 
         /**
          * Returns the status of the job with the provided job id.
          */
-        jobs(status?: Pacejs.Status): string[];
+        jobs(status?: Taskpace.Status): string[];
 
         /**
          * Returns the number of requests queued.
@@ -501,14 +501,14 @@ declare module "pacejs" {
         on(name: "depleted",  fn: (empty: boolean) => void): void;
         on(name: "message",   fn: (message: string) => void): void;
         on(name: "debug",     fn: (message: string, info: any) => void): void;
-        on(name: "dropped",   fn: (dropped: Pacejs.EventInfoDropped) => void): void;
-        on(name: "received",  fn: (info: Pacejs.EventInfo) => void): void;
-        on(name: "queued",    fn: (info: Pacejs.EventInfoQueued) => void): void;
-        on(name: "scheduled", fn: (info: Pacejs.EventInfo) => void): void;
-        on(name: "executing", fn: (info: Pacejs.EventInfoRetryable) => void): void;
-        on(name: "failed",    fn: (error: any, info: Pacejs.EventInfoRetryable) => Promise<number | void | null> | number | void | null): void;
-        on(name: "retry",     fn: (message: string, info: Pacejs.EventInfoRetryable) => void): void;
-        on(name: "done",      fn: (info: Pacejs.EventInfoRetryable) => void): void;
+        on(name: "dropped",   fn: (dropped: Taskpace.EventInfoDropped) => void): void;
+        on(name: "received",  fn: (info: Taskpace.EventInfo) => void): void;
+        on(name: "queued",    fn: (info: Taskpace.EventInfoQueued) => void): void;
+        on(name: "scheduled", fn: (info: Taskpace.EventInfo) => void): void;
+        on(name: "executing", fn: (info: Taskpace.EventInfoRetryable) => void): void;
+        on(name: "failed",    fn: (error: any, info: Taskpace.EventInfoRetryable) => Promise<number | void | null> | number | void | null): void;
+        on(name: "retry",     fn: (message: string, info: Taskpace.EventInfoRetryable) => void): void;
+        on(name: "done",      fn: (info: Taskpace.EventInfoRetryable) => void): void;
 
         /**
          * Register an event listener for one event only.
@@ -521,14 +521,14 @@ declare module "pacejs" {
         once(name: "depleted",  fn: (empty: boolean) => void): void;
         once(name: "message",   fn: (message: string) => void): void;
         once(name: "debug",     fn: (message: string, info: any) => void): void;
-        once(name: "dropped",   fn: (dropped: Pacejs.EventInfoDropped) => void): void;
-        once(name: "received",  fn: (info: Pacejs.EventInfo) => void): void;
-        once(name: "queued",    fn: (info: Pacejs.EventInfoQueued) => void): void;
-        once(name: "scheduled", fn: (info: Pacejs.EventInfo) => void): void;
-        once(name: "executing", fn: (info: Pacejs.EventInfoRetryable) => void): void;
-        once(name: "failed",    fn: (error: any, info: Pacejs.EventInfoRetryable) => Promise<number | void | null> | number | void | null): void;
-        once(name: "retry",     fn: (message: string, info: Pacejs.EventInfoRetryable) => void): void;
-        once(name: "done",      fn: (info: Pacejs.EventInfoRetryable) => void): void;
+        once(name: "dropped",   fn: (dropped: Taskpace.EventInfoDropped) => void): void;
+        once(name: "received",  fn: (info: Taskpace.EventInfo) => void): void;
+        once(name: "queued",    fn: (info: Taskpace.EventInfoQueued) => void): void;
+        once(name: "scheduled", fn: (info: Taskpace.EventInfo) => void): void;
+        once(name: "executing", fn: (info: Taskpace.EventInfoRetryable) => void): void;
+        once(name: "failed",    fn: (error: any, info: Taskpace.EventInfoRetryable) => Promise<number | void | null> | number | void | null): void;
+        once(name: "retry",     fn: (message: string, info: Taskpace.EventInfoRetryable) => void): void;
+        once(name: "done",      fn: (info: Taskpace.EventInfoRetryable) => void): void;
 
         /**
          * Removes all registered event listeners.
@@ -540,7 +540,7 @@ declare module "pacejs" {
          * Changes the settings for future requests.
          * @param options - The new settings.
          */
-        updateSettings(options?: Pacejs.ConstructorOptions): Pacejs;
+        updateSettings(options?: Taskpace.ConstructorOptions): Taskpace;
 
         /**
          * Adds to the reservoir count and returns the new value.
@@ -550,7 +550,7 @@ declare module "pacejs" {
         /**
          * The `stop()` method is used to safely shutdown a limiter. It prevents any new jobs from being added to the limiter and waits for all Executing jobs to complete.
          */
-        stop(options?: Pacejs.StopOptions): Promise<void>;
+        stop(options?: Taskpace.StopOptions): Promise<void>;
 
         /**
          * Returns the current reservoir count, if any.
@@ -561,28 +561,69 @@ declare module "pacejs" {
          * Chain this limiter to another.
          * @param limiter - The limiter that requests to this limiter must also follow.
          */
-        chain(limiter?: Pacejs): Pacejs;
+        chain(limiter?: Taskpace): Taskpace;
 
-        <%_ for (var count of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) { _%>
-        wrap<R<%_ for (var idx = 1; idx <= count; idx++) { _%>, A<%= idx %><%_ } _%>>(fn: (<%= Array.apply(null, Array(count)).map((e, i) => i+1).map(i => `arg${i}: A${i}`).join(", ") %>) => PromiseLike<R>): ((<%_ for (var idx = 1; idx <= count; idx++) { _%><%_ if (idx > 1) { %>, <% } %>arg<%= idx %>: A<%= idx %><%_ } _%>) => Promise<R>) & { withOptions: (options: Pacejs.JobOptions<%_ for (var idx = 1; idx <= count; idx++) { _%>, arg<%= idx %>: A<%= idx %><%_ } _%>) => Promise<R>; };
-        <%_ } _%>
+        wrap<R>(fn: () => PromiseLike<R>): (() => Promise<R>) & { withOptions: (options: Taskpace.JobOptions) => Promise<R>; };
+        wrap<R, A1>(fn: (arg1: A1) => PromiseLike<R>): ((arg1: A1) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1) => Promise<R>; };
+        wrap<R, A1, A2>(fn: (arg1: A1, arg2: A2) => PromiseLike<R>): ((arg1: A1, arg2: A2) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2) => Promise<R>; };
+        wrap<R, A1, A2, A3>(fn: (arg1: A1, arg2: A2, arg3: A3) => PromiseLike<R>): ((arg1: A1, arg2: A2, arg3: A3) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2, arg3: A3) => Promise<R>; };
+        wrap<R, A1, A2, A3, A4>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => PromiseLike<R>): ((arg1: A1, arg2: A2, arg3: A3, arg4: A4) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2, arg3: A3, arg4: A4) => Promise<R>; };
+        wrap<R, A1, A2, A3, A4, A5>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => PromiseLike<R>): ((arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => Promise<R>; };
+        wrap<R, A1, A2, A3, A4, A5, A6>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6) => PromiseLike<R>): ((arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6) => Promise<R>; };
+        wrap<R, A1, A2, A3, A4, A5, A6, A7>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7) => PromiseLike<R>): ((arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7) => Promise<R>; };
+        wrap<R, A1, A2, A3, A4, A5, A6, A7, A8>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8) => PromiseLike<R>): ((arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8) => Promise<R>; };
+        wrap<R, A1, A2, A3, A4, A5, A6, A7, A8, A9>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9) => PromiseLike<R>): ((arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9) => Promise<R>; };
+        wrap<R, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10) => PromiseLike<R>): ((arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10) => Promise<R>) & { withOptions: (options: Taskpace.JobOptions, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10) => Promise<R>; };
 
-        <%_ for (var count of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) { _%>
-        submit<R<%_ for (var idx = 1; idx <= count; idx++) { _%>, A<%= idx %><%_ } _%>>(fn: (<%_ for (var idx = 1; idx <= count; idx++) { _%>arg<%= idx %>: A<%= idx %>, <% } _%>callback: Pacejs.Callback<R>) => void<%_ for (var idx = 1; idx <= count; idx++) { _%>, arg<%= idx %>: A<%= idx %><%_ } _%>, callback: Pacejs.Callback<R>): void;
-        <%_ } _%>
+        submit<R>(fn: (callback: Taskpace.Callback<R>) => void, callback: Taskpace.Callback<R>): void;
+        submit<R, A1>(fn: (arg1: A1, callback: Taskpace.Callback<R>) => void, arg1: A1, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2>(fn: (arg1: A1, arg2: A2, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3>(fn: (arg1: A1, arg2: A2, arg3: A3, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6, A7>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6, A7, A8>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6, A7, A8, A9>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10, callback: Taskpace.Callback<R>): void;
 
-        <%_ for (var count of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) { _%>
-        submit<R<%_ for (var idx = 1; idx <= count; idx++) { _%>, A<%= idx %><%_ } _%>>(options: Pacejs.JobOptions, fn: (<%_ for (var idx = 1; idx <= count; idx++) { _%>arg<%= idx %>: A<%= idx %>, <% } _%>callback: Pacejs.Callback<R>) => void<%_ for (var idx = 1; idx <= count; idx++) { _%>, arg<%= idx %>: A<%= idx %><%_ } _%>, callback: Pacejs.Callback<R>): void;
-        <%_ } _%>
+        submit<R>(options: Taskpace.JobOptions, fn: (callback: Taskpace.Callback<R>) => void, callback: Taskpace.Callback<R>): void;
+        submit<R, A1>(options: Taskpace.JobOptions, fn: (arg1: A1, callback: Taskpace.Callback<R>) => void, arg1: A1, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6, A7>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6, A7, A8>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6, A7, A8, A9>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, callback: Taskpace.Callback<R>): void;
+        submit<R, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10, callback: Taskpace.Callback<R>) => void, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10, callback: Taskpace.Callback<R>): void;
 
-        <%_ for (var count of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) { _%>
-        schedule<R<%_ for (var idx = 1; idx <= count; idx++) { _%>, A<%= idx %><%_ } _%>>(fn: (<%= Array.apply(null, Array(count)).map((e, i) => i+1).map(i => `arg${i}: A${i}`).join(", ") %>) => PromiseLike<R><%_ for (var idx = 1; idx <= count; idx++) { _%>, arg<%= idx %>: A<%= idx %><%_ } _%>): Promise<R>;
-        <%_ } _%>
+        schedule<R>(fn: () => PromiseLike<R>): Promise<R>;
+        schedule<R, A1>(fn: (arg1: A1) => PromiseLike<R>, arg1: A1): Promise<R>;
+        schedule<R, A1, A2>(fn: (arg1: A1, arg2: A2) => PromiseLike<R>, arg1: A1, arg2: A2): Promise<R>;
+        schedule<R, A1, A2, A3>(fn: (arg1: A1, arg2: A2, arg3: A3) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3): Promise<R>;
+        schedule<R, A1, A2, A3, A4>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6, A7>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6, A7, A8>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6, A7, A8, A9>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>(fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10): Promise<R>;
 
-        <%_ for (var count of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) { _%>
-        schedule<R<%_ for (var idx = 1; idx <= count; idx++) { _%>, A<%= idx %><%_ } _%>>(options: Pacejs.JobOptions, fn: (<%= Array.apply(null, Array(count)).map((e, i) => i+1).map(i => `arg${i}: A${i}`).join(", ") %>) => PromiseLike<R><%_ for (var idx = 1; idx <= count; idx++) { _%>, arg<%= idx %>: A<%= idx %><%_ } _%>): Promise<R>;
-        <%_ } _%>
+        schedule<R>(options: Taskpace.JobOptions, fn: () => PromiseLike<R>): Promise<R>;
+        schedule<R, A1>(options: Taskpace.JobOptions, fn: (arg1: A1) => PromiseLike<R>, arg1: A1): Promise<R>;
+        schedule<R, A1, A2>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2) => PromiseLike<R>, arg1: A1, arg2: A2): Promise<R>;
+        schedule<R, A1, A2, A3>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3): Promise<R>;
+        schedule<R, A1, A2, A3, A4>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6, A7>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6, A7, A8>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6, A7, A8, A9>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9): Promise<R>;
+        schedule<R, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>(options: Taskpace.JobOptions, fn: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10) => PromiseLike<R>, arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5, arg6: A6, arg7: A7, arg8: A8, arg9: A9, arg10: A10): Promise<R>;
     }
 
-    export default Pacejs;
+    export default Taskpace;
 }
+

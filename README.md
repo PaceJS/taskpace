@@ -1,33 +1,33 @@
-# pacejs
+# taskpace
 
-Pacejs is a task scheduler and rate limiter for Node.js and the browser. It queues work and runs it under limits you set: how many jobs may run at once, how long to wait between starts, and how large the waiting line may grow.
+Taskpace is a task scheduler and rate limiter for Node.js and the browser. It queues work and runs it under limits you set: how many jobs may run at once, how long to wait between starts, and how large the waiting line may grow.
 
 It has no runtime dependencies. The same limiter can also share its counters across processes through Redis.
 
 ## Install
 
 ```bash
-npm install pacejs
+npm install taskpace
 ```
 
 ```js
-const Pacejs = require("pacejs");
+const Taskpace = require("taskpace");
 ```
 
 ```js
-import Pacejs from "pacejs";
+import Taskpace from "taskpace";
 ```
 
 Browsers and Node versions older than 6 should load the ES5 build:
 
 ```js
-const Pacejs = require("pacejs/es5");
+const Taskpace = require("taskpace/es5");
 ```
 
 ## Create a limiter
 
 ```js
-const limiter = new Pacejs({
+const limiter = new Taskpace({
   maxConcurrent: 2,
   minTime: 200
 });
@@ -57,7 +57,7 @@ const fetchText = limiter.wrap(loadPage);
 const body = await fetchText("/reports");
 ```
 
-The wrapped function has the same arguments as the original. It returns a promise that settles when the job finishes, or when Pacejs itself rejects the job.
+The wrapped function has the same arguments as the original. It returns a promise that settles when the job finishes, or when Taskpace itself rejects the job.
 
 ### Callbacks
 
@@ -77,7 +77,7 @@ If you do not need the callback, pass `null`. The function you submit still has 
 | `maxConcurrent` | `null` | Maximum number of jobs in progress. `null` means no cap. |
 | `minTime` | `0` | Milliseconds to wait after a job starts before the next one can start. |
 | `highWater` | `null` | Maximum queue length. Past this point, the chosen `strategy` drops work. Ignored when `null`. |
-| `strategy` | `Pacejs.strategy.LEAK` | What to do when the queue would pass `highWater`. |
+| `strategy` | `Taskpace.strategy.LEAK` | What to do when the queue would pass `highWater`. |
 | `penalty` | `15 * minTime`, or `5000` when `minTime` is `0` | How long `BLOCK` stays closed after the queue overflows. |
 | `reservoir` | `null` | How many jobs may start before the limiter pauses. `0` stops new starts until the value rises again. Jobs can still be queued. |
 | `reservoirRefreshInterval` | `null` | How often, in milliseconds, to set `reservoir` back to `reservoirRefreshAmount`. |
@@ -86,7 +86,7 @@ If you do not need the callback, pass `null`. The function you submit still has 
 | `reservoirIncreaseAmount` | `null` | Amount added on each increase. |
 | `reservoirIncreaseMaximum` | `null` | Ceiling for `reservoir` while increases are enabled. |
 | `trackDoneStatus` | `false` | Keep finished jobs visible to `counts()` and `jobStatus()`. Uses more memory. |
-| `Promise` | the built-in `Promise` | Promise implementation Pacejs should use. |
+| `Promise` | the built-in `Promise` | Promise implementation Taskpace should use. |
 
 Refresh and increase intervals must be a multiple of 250. When the limiter stores state in Redis, use a multiple of 5000.
 
@@ -101,7 +101,7 @@ Use a reservoir when a quota resets on a clock, rather than when you only need a
 This allows 30 starts, then restores that allowance every minute:
 
 ```js
-const limiter = new Pacejs({
+const limiter = new Taskpace({
   reservoir: 30,
   reservoirRefreshAmount: 30,
   reservoirRefreshInterval: 60 * 1000,
@@ -113,7 +113,7 @@ const limiter = new Pacejs({
 This starts with 20 starts and adds 1 every second, never going above 20:
 
 ```js
-const limiter = new Pacejs({
+const limiter = new Taskpace({
   reservoir: 20,
   reservoirIncreaseAmount: 1,
   reservoirIncreaseInterval: 1000,
@@ -147,19 +147,19 @@ await send.withOptions({ expiration: 8000 }, "/charges", payload);
 | --- | --- | --- |
 | `priority` | `5` | Integer from `0` (runs sooner) to `9` (runs later). Priorities only order work that is actually waiting, so set `maxConcurrent`. |
 | `weight` | `1` | How much this job counts against `maxConcurrent` and `reservoir`. Integer `0` or greater. |
-| `expiration` | `null` | Milliseconds the job may run. After that, it fails with a `PacejsError`. |
+| `expiration` | `null` | Milliseconds the job may run. After that, it fails with a `TaskpaceError`. |
 | `id` | `"<no-id>"` | Label used in debug output and by `jobStatus()`. |
 
 ## When the queue is too long
 
-If adding a job would make the queue longer than `highWater`, Pacejs applies `strategy`. Nothing in this section runs while `highWater` is `null`.
+If adding a job would make the queue longer than `highWater`, Taskpace applies `strategy`. Nothing in this section runs while `highWater` is `null`.
 
 | Strategy | Behavior |
 | --- | --- |
-| `Pacejs.strategy.LEAK` | Drop the oldest waiting job that has the lowest priority. If every waiting job outranks the new one, the new job is the one dropped. |
-| `Pacejs.strategy.OVERFLOW_PRIORITY` | Drop a waiting job only when it is less important than the new one. Otherwise reject the new job. |
-| `Pacejs.strategy.OVERFLOW` | Reject the new job. Priority is ignored. |
-| `Pacejs.strategy.BLOCK` | Drop the queue and refuse new jobs until `penalty` milliseconds pass with no new arrival. Priority is ignored. One limiter entering this state blocks every limiter that shares its Redis datastore. |
+| `Taskpace.strategy.LEAK` | Drop the oldest waiting job that has the lowest priority. If every waiting job outranks the new one, the new job is the one dropped. |
+| `Taskpace.strategy.OVERFLOW_PRIORITY` | Drop a waiting job only when it is less important than the new one. Otherwise reject the new job. |
+| `Taskpace.strategy.OVERFLOW` | Reject the new job. Priority is ignored. |
+| `Taskpace.strategy.BLOCK` | Drop the queue and refuse new jobs until `penalty` milliseconds pass with no new arrival. Priority is ignored. One limiter entering this state blocks every limiter that shares its Redis datastore. |
 
 Listen for drops:
 
@@ -280,9 +280,9 @@ await limiter.stop({
 `chain` sends a job to another limiter once this one is ready to run it. Both limits apply:
 
 ```js
-const reports = new Pacejs({ minTime: 50 });
-const uploads = new Pacejs({ maxConcurrent: 1 });
-const globalCap = new Pacejs({ maxConcurrent: 4 });
+const reports = new Taskpace({ minTime: 50 });
+const uploads = new Taskpace({ maxConcurrent: 1 });
+const globalCap = new Taskpace({ maxConcurrent: 4 });
 
 reports.chain(globalCap);
 uploads.chain(globalCap);
@@ -292,10 +292,10 @@ reports.chain(null); // remove the link
 
 ## One limiter per key
 
-`Pacejs.Group` builds a limiter the first time you ask for a key, and reuses it after that.
+`Taskpace.Group` builds a limiter the first time you ask for a key, and reuses it after that.
 
 ```js
-const group = new Pacejs.Group({ maxConcurrent: 1, minTime: 100 });
+const group = new Taskpace.Group({ maxConcurrent: 1, minTime: 100 });
 
 group.on("created", (limiter, key) => {
   limiter.on("error", (err) => console.error(key, err));
@@ -320,10 +320,10 @@ In Redis mode, a generated limiter id looks like `${group.id}-${key}`.
 
 ## Group calls into batches
 
-`Pacejs.Batcher` collects values and flushes them together. It does not apply a rate limit.
+`Taskpace.Batcher` collects values and flushes them together. It does not apply a rate limit.
 
 ```js
-const batcher = new Pacejs.Batcher({
+const batcher = new Taskpace.Batcher({
   maxTime: 200,
   maxSize: 25
 });
@@ -347,7 +347,7 @@ await batcher.add(row);
 Set `datastore` to `"redis"` or `"ioredis"` so every limiter with the same `id` shares counters. Install the client yourself (`redis` or `ioredis`). It is not bundled.
 
 ```js
-const limiter = new Pacejs({
+const limiter = new Taskpace({
   id: "checkout",
   maxConcurrent: 5,
   minTime: 100,
@@ -367,8 +367,8 @@ const limiter = new Pacejs({
 | `clientOptions` | `{}` | Passed through to the Redis client. |
 | `clusterNodes` | `null` | ioredis only. When set, the client is `new Redis.Cluster(clusterNodes, clientOptions)`. |
 | `timeout` | `null` | Remove this limiter's Redis keys after this many milliseconds without activity. Groups default this to `300000`. |
-| `Redis` | `null` | The `redis` or `ioredis` module, if Pacejs should not load it itself. |
-| `connection` | `null` | An existing `Pacejs.RedisConnection` or `Pacejs.IORedisConnection`. When set, `datastore`, `clientOptions`, and `clusterNodes` are ignored. |
+| `Redis` | `null` | The `redis` or `ioredis` module, if Taskpace should not load it itself. |
+| `connection` | `null` | An existing `Taskpace.RedisConnection` or `Taskpace.IORedisConnection`. When set, `datastore`, `clientOptions`, and `clusterNodes` are ignored. |
 
 The first limiter to connect stores its constructor options. Later limiters with that `id` use the stored options. Call `updateSettings` to change them for everyone. `clearDatastore: true` wipes that record first.
 
@@ -380,7 +380,7 @@ Queues stay in the process that called `schedule` or `submit`. They are not writ
 - `highWater` is local, except that `BLOCK` freezes the whole shared limiter.
 - `"empty"` refers to the local queue. `"idle"` also requires that nothing is running anywhere in the shared state.
 
-`minTime` does not subtract network delay. Pacejs makes one Redis round trip per stage change. Keep the server close, and keep clocks aligned across hosts.
+`minTime` does not subtract network delay. Taskpace makes one Redis round trip per stage change. Keep the server close, and keep clocks aligned across hosts.
 
 Redis Cluster needs `datastore: "ioredis"` and `clusterNodes`. Redis Sentinel also needs `ioredis`.
 
@@ -389,7 +389,7 @@ If a bundler cannot see the optional client import, pass the module in:
 ```js
 import Redis from "ioredis";
 
-const limiter = new Pacejs({
+const limiter = new Taskpace({
   id: "checkout",
   datastore: "ioredis",
   clientOptions: { host: "127.0.0.1", port: 6379 },
@@ -418,38 +418,38 @@ const { client, subscriber } = limiter.clients();
 
 ### One connection for many limiters
 
-Pacejs opens two clients: one for commands and one for subscriptions. Build a connection once and pass it in to share them.
+Taskpace opens two clients: one for commands and one for subscriptions. Build a connection once and pass it in to share them.
 
 ```js
-const connection = new Pacejs.IORedisConnection({
+const connection = new Taskpace.IORedisConnection({
   clientOptions: { host: "127.0.0.1", port: 6379 }
 });
 
 connection.on("error", (err) => console.error(err));
 
-const limiter = new Pacejs({ id: "checkout", connection });
-const group = new Pacejs.Group({ connection });
+const limiter = new Taskpace({ id: "checkout", connection });
+const group = new Taskpace.Group({ connection });
 ```
 
-`Pacejs.RedisConnection` is the matching helper for the `redis` package. You can also hand over a client you already opened. Pacejs still creates the subscriber client.
+`Taskpace.RedisConnection` is the matching helper for the `redis` package. You can also hand over a client you already opened. Taskpace still creates the subscriber client.
 
 ```js
-const connection = new Pacejs.RedisConnection({ client });
+const connection = new Taskpace.RedisConnection({ client });
 ```
 
-`disconnect()` closes clients that Pacejs opened. If you created the connection yourself, call `connection.disconnect()` instead.
+`disconnect()` closes clients that Taskpace opened. If you created the connection yourself, call `connection.disconnect()` instead.
 
-Pacejs stores its Redis data under its own keys and channels, separate from other application data. It loads a few Lua scripts with `SCRIPT LOAD`. `SCRIPT FLUSH` removes those scripts and breaks connected limiters until another one loads them again.
+Taskpace stores its Redis data under its own keys and channels, separate from other application data. It loads a few Lua scripts with `SCRIPT LOAD`. `SCRIPT FLUSH` removes those scripts and breaks connected limiters until another one loads them again.
 
-## Failures from Pacejs
+## Failures from Taskpace
 
-When Pacejs rejects a job, the error is a `Pacejs.PacejsError`. That includes dropped jobs, expirations, and jobs refused after `stop()`.
+When Taskpace rejects a job, the error is a `Taskpace.TaskpaceError`. That includes dropped jobs, expirations, and jobs refused after `stop()`.
 
 ```js
 try {
   await limiter.schedule(() => callApi());
 } catch (err) {
-  if (err instanceof Pacejs.PacejsError) {
+  if (err instanceof Taskpace.TaskpaceError) {
     console.error(err.message);
   } else {
     throw err;

@@ -1,8 +1,8 @@
 {
-  "name": "pacejs",
-  "main": "pacejs.js",
+  "name": "taskpace",
+  "main": "taskpace.js",
   "version": "1.0.0",
-  "homepage": "https://github.com/PaceJS/pacejs",
+  "homepage": "https://github.com/PaceJS/taskpace",
   "authors": [
     "Tom Hundley"
   ],

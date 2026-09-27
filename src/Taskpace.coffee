@@ -10,16 +10,16 @@ Events = require "./Events"
 States = require "./States"
 Sync = require "./Sync"
 
-class Pacejs
-  Pacejs.default = Pacejs
-  Pacejs.Events = Events
-  Pacejs.version = Pacejs::version = require("./version.json").version
-  Pacejs.strategy = Pacejs::strategy = { LEAK:1, OVERFLOW:2, OVERFLOW_PRIORITY:4, BLOCK:3 }
-  Pacejs.PacejsError = Pacejs::PacejsError = require "./PacejsError"
-  Pacejs.Group = Pacejs::Group = require "./Group"
-  Pacejs.RedisConnection = Pacejs::RedisConnection = require "./RedisConnection"
-  Pacejs.IORedisConnection = Pacejs::IORedisConnection = require "./IORedisConnection"
-  Pacejs.Batcher = Pacejs::Batcher = require "./Batcher"
+class Taskpace
+  Taskpace.default = Taskpace
+  Taskpace.Events = Events
+  Taskpace.version = Taskpace::version = require("./version.json").version
+  Taskpace.strategy = Taskpace::strategy = { LEAK:1, OVERFLOW:2, OVERFLOW_PRIORITY:4, BLOCK:3 }
+  Taskpace.TaskpaceError = Taskpace::TaskpaceError = require "./TaskpaceError"
+  Taskpace.Group = Taskpace::Group = require "./Group"
+  Taskpace.RedisConnection = Taskpace::RedisConnection = require "./RedisConnection"
+  Taskpace.IORedisConnection = Taskpace::IORedisConnection = require "./IORedisConnection"
+  Taskpace.Batcher = Taskpace::Batcher = require "./Batcher"
   jobDefaults:
     priority: DEFAULT_PRIORITY
     weight: 1
@@ -29,7 +29,7 @@ class Pacejs
     maxConcurrent: null
     minTime: 0
     highWater: null
-    strategy: Pacejs::strategy.LEAK
+    strategy: Taskpace::strategy.LEAK
     penalty: null
     reservoir: null
     reservoirRefreshInterval: null
@@ -82,14 +82,14 @@ class Pacejs
       storeInstanceOptions = parser.load options, @localStoreDefaults, {}
       new LocalDatastore @, storeOptions, storeInstanceOptions
     else
-      throw new Pacejs::PacejsError "Invalid datastore type: #{@datastore}"
+      throw new Taskpace::TaskpaceError "Invalid datastore type: #{@datastore}"
 
     @_queues.on "leftzero", => @_store.heartbeat?.ref?()
     @_queues.on "zero", => @_store.heartbeat?.unref?()
 
   _validateOptions: (options, invalid) ->
     unless options? and typeof options == "object" and invalid.length == 0
-      throw new Pacejs::PacejsError "Pacejs v2 takes a single object argument. Refer to https://github.com/PaceJS/pacejs#upgrading-to-v2 if you're upgrading from Pacejs v1."
+      throw new Taskpace::TaskpaceError "Taskpace v2 takes a single object argument. Refer to https://github.com/PaceJS/taskpace#upgrading-to-v2 if you're upgrading from Taskpace v1."
 
   ready: -> @_store.ready
 
@@ -213,8 +213,8 @@ class Pacejs
         waitForExecuting(0)
     else
       @schedule { priority: NUM_PRIORITIES - 1, weight: 0 }, => waitForExecuting(1)
-    @_receive = (job) -> job._reject new Pacejs::PacejsError options.enqueueErrorMessage
-    @stop = => @Promise.reject new Pacejs::PacejsError "stop() has already been called"
+    @_receive = (job) -> job._reject new Taskpace::TaskpaceError options.enqueueErrorMessage
+    @stop = => @Promise.reject new Taskpace::TaskpaceError "stop() has already been called"
     done
 
   _addToQueue: (job) =>
@@ -230,11 +230,11 @@ class Pacejs
       job.doDrop()
       return true
     else if reachedHWM
-      shifted = if strategy == Pacejs::strategy.LEAK then @_queues.shiftLastFrom(options.priority)
-      else if strategy == Pacejs::strategy.OVERFLOW_PRIORITY then @_queues.shiftLastFrom(options.priority + 1)
-      else if strategy == Pacejs::strategy.OVERFLOW then job
+      shifted = if strategy == Taskpace::strategy.LEAK then @_queues.shiftLastFrom(options.priority)
+      else if strategy == Taskpace::strategy.OVERFLOW_PRIORITY then @_queues.shiftLastFrom(options.priority + 1)
+      else if strategy == Taskpace::strategy.OVERFLOW then job
       if shifted? then shifted.doDrop()
-      if not shifted? or strategy == Pacejs::strategy.OVERFLOW
+      if not shifted? or strategy == Taskpace::strategy.OVERFLOW
         if not shifted? then job.doDrop()
         return reachedHWM
 
@@ -245,7 +245,7 @@ class Pacejs
 
   _receive: (job) ->
     if @_states.jobStatus(job.options.id)?
-      job._reject new Pacejs::PacejsError "A job with the same id already exists (id=#{job.options.id})"
+      job._reject new Taskpace::TaskpaceError "A job with the same id already exists (id=#{job.options.id})"
       false
     else
       job.doReceive()
@@ -295,4 +295,4 @@ class Pacejs
 
   incrementReservoir: (incr=0) -> @_store.__incrementReservoir__ incr
 
-module.exports = Pacejs
+module.exports = Taskpace

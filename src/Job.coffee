@@ -2,7 +2,7 @@ NUM_PRIORITIES = 10
 DEFAULT_PRIORITY = 5
 
 parser = require "./parser"
-PacejsError = require "./PacejsError"
+TaskpaceError = require "./TaskpaceError"
 
 class Job
   constructor: (@task, @args, options, jobDefaults, @rejectOnDrop, @Events, @_states, @Promise) ->
@@ -18,9 +18,9 @@ class Job
 
   _randomIndex: -> Math.random().toString(36).slice(2)
 
-  doDrop: ({ error, message="This job has been dropped by Pacejs" } = {}) ->
+  doDrop: ({ error, message="This job has been dropped by Taskpace" } = {}) ->
     if @_states.remove @options.id
-      if @rejectOnDrop then @_reject (error ? new PacejsError message)
+      if @rejectOnDrop then @_reject (error ? new TaskpaceError message)
       @Events.trigger "dropped", { @args, @options, @task, @promise }
       true
     else
@@ -29,7 +29,7 @@ class Job
   _assertStatus: (expected) ->
     status = @_states.jobStatus @options.id
     if not (status == expected or (expected == "DONE" and status == null))
-      throw new PacejsError "Invalid job status #{status}, expected #{expected}. Please open an issue at https://github.com/PaceJS/pacejs/issues"
+      throw new TaskpaceError "Invalid job status #{status}, expected #{expected}. Please open an issue at https://github.com/PaceJS/taskpace/issues"
 
   doReceive: () ->
     @_states.start @options.id
@@ -73,7 +73,7 @@ class Job
       @_states.next @options.id
     @_assertStatus "EXECUTING"
     eventInfo = { @args, @options, @retryCount }
-    error = new PacejsError "This job timed out after #{@options.expiration} ms."
+    error = new TaskpaceError "This job timed out after #{@options.expiration} ms."
     @_onFailure error, eventInfo, clearGlobalState, run, free
 
   _onFailure: (error, eventInfo, clearGlobalState, run, free) ->

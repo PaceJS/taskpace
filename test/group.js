@@ -1,5 +1,5 @@
 var makeTest = require('./context')
-var Pacejs = require('./pacejs')
+var Taskpace = require('./taskpace')
 var assert = require('assert')
 
 describe('Group', function () {
@@ -11,7 +11,7 @@ describe('Group', function () {
 
   it('Should create limiters', function (done) {
     c = makeTest()
-    var group = new Pacejs.Group({
+    var group = new Taskpace.Group({
       maxConcurrent: 1, minTime: 100
     })
 
@@ -46,7 +46,7 @@ describe('Group', function () {
 
   it('Should set up the limiter IDs (default)', function () {
     c = makeTest()
-    var group = new Pacejs.Group({
+    var group = new Taskpace.Group({
       maxConcurrent: 1, minTime: 100
     })
 
@@ -64,7 +64,7 @@ describe('Group', function () {
 
   it('Should set up the limiter IDs (custom)', function () {
     c = makeTest()
-    var group = new Pacejs.Group({
+    var group = new Taskpace.Group({
       maxConcurrent: 1, minTime: 100,
       id: 'custom-id'
     })
@@ -83,7 +83,7 @@ describe('Group', function () {
 
   it('Should pass new limiter to \'created\' event', function () {
     c = makeTest()
-    var group = new Pacejs.Group({
+    var group = new Taskpace.Group({
       maxConcurrent: 1, minTime: 100
     })
 
@@ -120,7 +120,7 @@ describe('Group', function () {
   it('Should pass error on failure', function (done) {
     var failureMessage = 'SOMETHING BLEW UP!!'
     c = makeTest()
-    var group = new Pacejs.Group({
+    var group = new Taskpace.Group({
       maxConcurrent: 1, minTime: 100
     })
     c.mustEqual(Object.keys(group.limiters), [])
@@ -158,10 +158,10 @@ describe('Group', function () {
 
   it('Should update its timeout', function () {
     c = makeTest()
-    var group1 = new Pacejs.Group({
+    var group1 = new Taskpace.Group({
       maxConcurrent: 1, minTime: 100
     })
-    var group2 = new Pacejs.Group({
+    var group2 = new Taskpace.Group({
       maxConcurrent: 1, minTime: 100, timeout: 5000
     })
 
@@ -179,7 +179,7 @@ describe('Group', function () {
 
   it('Should update its limiter options', function () {
     c = makeTest()
-    var group = new Pacejs.Group({
+    var group = new Taskpace.Group({
       maxConcurrent: 1, minTime: 100
     })
 
@@ -195,7 +195,7 @@ describe('Group', function () {
 
   it('Should support keys(), limiters(), deleteKey()', function () {
     c = makeTest()
-    var group1 = new Pacejs.Group({
+    var group1 = new Taskpace.Group({
       maxConcurrent: 1
     })
     var KEY_A = "AAA"
@@ -213,7 +213,7 @@ describe('Group', function () {
 
       limiters.forEach(function (limiter, i) {
         c.mustEqual(limiter.key, keys[i])
-        assert(limiter.limiter instanceof Pacejs)
+        assert(limiter.limiter instanceof Taskpace)
       })
 
       return group1.deleteKey(KEY_A)
@@ -231,7 +231,7 @@ describe('Group', function () {
 
   it('Should call autocleanup', function () {
     var KEY = 'test-key'
-    var group = new Pacejs.Group({
+    var group = new Taskpace.Group({
       maxConcurrent: 1
     })
     group.updateSettings({ timeout: 50 })

@@ -13,7 +13,7 @@ class RedisConnection
 
   constructor: (options={}) ->
     parser.load options, @defaults, @
-    @Redis ?= eval("require")("redis") # Obfuscated or else Webpack/Angular will try to inline the optional redis module. To override this behavior: pass the redis module to Pacejs as the 'Redis' option.
+    @Redis ?= eval("require")("redis") # Obfuscated or else Webpack/Angular will try to inline the optional redis module. To override this behavior: pass the redis module to Taskpace as the 'Redis' option.
     @Events ?= new Events @
     @terminated = false
 
